@@ -241,9 +241,7 @@
       }
     }
 
-    /* ==========================================================================
-       REAL MEME IMAGE CARD STYLING
-       ========================================================================== */
+    /* Real Meme Image Box */
     .question-image-box {
       width: 100%;
       height: 220px;
@@ -953,10 +951,10 @@
       <span id="soundText">المؤثرات: مفعلة</span>
     </button>
 
-    <!-- Voiceover Narrator Toggle -->
+    <!-- AI Voiceover Toggle -->
     <button id="voiceoverToggle" class="brutal-badge-btn" style="background: var(--color-yellow);">
-      <span id="voIcon">🎙️</span>
-      <span id="voText">الفويس أوفر: شغال</span>
+      <span id="voIcon">🤖</span>
+      <span id="voText">صوت الذكاء الاصطناعي: شغال</span>
     </button>
   </div>
 
@@ -995,18 +993,22 @@
 
       <!-- Live Memory Roast Ticker Box -->
       <div class="memory-commentary-box" id="memoryCommentaryBox">
-        <div class="memory-avatar" id="memoryAvatar">🎙️</div>
+        <div class="memory-avatar" id="memoryAvatar">🤖</div>
         <div class="memory-body">
-          <div class="memory-tag" id="memoryAuthorTag">⚡ يونس (أرشيف السلم) يتحدث:</div>
+          <div class="memory-tag" id="memoryAuthorTag">⚡ الذكاء الاصطناعي (أرشيف السلم) يتحدث:</div>
           <div class="memory-text" id="memoryText">
-            «أهلاً يا أسامة في خزينتك السرية.. متفتكرش إن حركات السلم وكاميرات التكنو عدت بالساهل! دوس وافتح لو قلبك جايبك!»
+            «أهلاً بك يا أسامة في خزينتك السرية.. متفتكرش إن حركات السلم وكاميرات التكنو عدت بالساهل! دوس وافتح الخزنة لو قلبك جايبك!»
           </div>
         </div>
+        <button id="playLandingAiVoBtn" class="voice-control-btn">
+          <span>🤖 استمع للمقدمة</span>
+          <span id="landingVoIcon">▶️</span>
+        </button>
       </div>
     </section>
 
     <!-- ========================================================================
-         SCREEN 2: PSYCHOLOGICAL QUESTIONS & REAL MEME IMAGES
+         SCREEN 2: PSYCHOLOGICAL QUESTIONS & REAL MEME IMAGES + AI VOICEOVER
          ======================================================================== -->
     <section id="screen2" class="game-screen">
       <!-- Progress Bar -->
@@ -1040,9 +1042,9 @@
             <span style="font-weight:900; color:#555;" id="questionTopic">الموبايلات والتكنولوجيا</span>
           </div>
           
-          <!-- Voiceover Playback Control Button -->
+          <!-- AI Voiceover Playback Control Button -->
           <button id="playVoiceoverBtn" class="voice-control-btn">
-            <span>🎙️ فويس أوفر يونس</span>
+            <span>🤖 صوت الذكاء الاصطناعي</span>
             <span id="voPlayIcon">▶️</span>
           </button>
         </div>
@@ -1250,16 +1252,22 @@
   </div>
 
   <!-- ==========================================================================
-       JAVASCRIPT ENGINE: AUDIO SFX + ACCURATE VOICEOVER + REAL MEMES
+       JAVASCRIPT ENGINE: AUDIO SFX + NEURAL AI VOICEOVER + REAL MEMES
        ========================================================================== -->
   <script>
     /* ==========================================================================
-       🎙️ EXACT VOICEOVER MAPPING
+       🎙️ NEURAL AI EGYPTIAN ARABIC VOICEOVERS
        ========================================================================== */
     const VOICE_OVER_TRACKS = {
-      q1: "audio/q1.mp3",  // السؤال الأول (الموبايلات والتكنو كامون 30)
-      q2: "audio/q2.mp3",  // السؤال الثاني (السلم وباقة النت)
-      q3: "audio/q3.mp3"   // السؤال الثالث (جوانتي فري فاير)
+      landing: "audio/landing.mp3",
+      q1: "audio/q1.mp3",
+      q2: "audio/q2.mp3",
+      q3: "audio/q3.mp3",
+      q4: "audio/q4.mp3",
+      q5: "audio/q5.mp3",
+      q6: "audio/q6.mp3",
+      q7: "audio/q7.mp3",
+      reveal: "audio/reveal.mp3"
     };
 
     /* ==========================================================================
@@ -1412,15 +1420,27 @@
 
     const playVoiceoverBtn = document.getElementById('playVoiceoverBtn');
     const voPlayIcon = document.getElementById('voPlayIcon');
+    const playLandingAiVoBtn = document.getElementById('playLandingAiVoBtn');
+    const landingVoIcon = document.getElementById('landingVoIcon');
 
     function updateVoiceButtonUI(isPlaying) {
-      if (!playVoiceoverBtn) return;
-      if (isPlaying) {
-        playVoiceoverBtn.classList.add('playing');
-        voPlayIcon.textContent = '⏸️';
-      } else {
-        playVoiceoverBtn.classList.remove('playing');
-        voPlayIcon.textContent = '▶️';
+      if (playVoiceoverBtn) {
+        if (isPlaying) {
+          playVoiceoverBtn.classList.add('playing');
+          voPlayIcon.textContent = '⏸️';
+        } else {
+          playVoiceoverBtn.classList.remove('playing');
+          voPlayIcon.textContent = '▶️';
+        }
+      }
+      if (playLandingAiVoBtn) {
+        if (isPlaying) {
+          playLandingAiVoBtn.classList.add('playing');
+          landingVoIcon.textContent = '⏸️';
+        } else {
+          playLandingAiVoBtn.classList.remove('playing');
+          landingVoIcon.textContent = '▶️';
+        }
       }
     }
 
@@ -1429,6 +1449,10 @@
       if (q && q.trackKey && VOICE_OVER_TRACKS[q.trackKey]) {
         voice.toggle(VOICE_OVER_TRACKS[q.trackKey]);
       }
+    });
+
+    playLandingAiVoBtn.addEventListener('click', () => {
+      voice.toggle(VOICE_OVER_TRACKS.landing);
     });
 
     // Top action bar button listeners
@@ -1453,14 +1477,14 @@
     voiceoverToggleBtn.addEventListener('click', () => {
       voice.enabled = !voice.enabled;
       if (voice.enabled) {
-        voIcon.textContent = '🎙️';
-        voText.textContent = 'الفويس أوفر: شغال';
+        voIcon.textContent = '🤖';
+        voText.textContent = 'صوت الذكاء الاصطناعي: شغال';
         voiceoverToggleBtn.style.background = 'var(--color-yellow)';
         sound.play('coin');
       } else {
         voice.stop();
         voIcon.textContent = '🔇';
-        voText.textContent = 'الفويس أوفر: معطل';
+        voText.textContent = 'صوت الذكاء الاصطناعي: معطل';
         voiceoverToggleBtn.style.background = '#e5e7eb';
       }
     });
@@ -1470,8 +1494,8 @@
        ========================================================================== */
     const ROAST_MEMORIES = [
       {
-        tag: "⚡ يونس (أرشيف السلم) يتحدث:",
-        text: "«أهلاً يا أسامة في خزينتك السرية.. متفتكرش إن حركات السلم وكاميرات التكنو عدت بالساهل! دوس وافتح لو قلبك جايبك!»"
+        tag: "⚡ الذكاء الاصطناعي (أرشيف السلم) يتحدث:",
+        text: "«أهلاً بك يا أسامة في خزينتك السرية.. متفتكرش إن حركات السلم وكاميرات التكنو عدت بالساهل! دوس وافتح الخزنة لو قلبك جايبك!»"
       },
       {
         tag: "📱 ذكرى كاميرا التكنو:",
@@ -1514,7 +1538,7 @@
     }
 
     /* ==========================================================================
-       THE 7 QUESTIONS WITH REAL WEB MEME IMAGES
+       THE 7 QUESTIONS WITH REAL WEB MEME IMAGES & AI VOICEOVERS
        ========================================================================== */
     const QUESTIONS_DATA = [
       {
@@ -1574,7 +1598,7 @@
       {
         category: "الترندات وحركات التيك توك",
         text: "لما ترند جديد ينزل على التيك توك.. التصرف الصحيح إيه؟",
-        trackKey: "",
+        trackKey: "q4",
         imageUrl: "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=600&q=80",
         stickerText: "رقصة التيك توك في نص الصالة 🕺🎵",
         roastText: "«الرقصة المفاجئة في نص القعدة.. كنت محتاج فيها إعادة ضبط مصنع يا أسامة!»",
@@ -1592,7 +1616,7 @@
       {
         category: "التنافس الدراسي والتفوق",
         text: "أنت في الدرس مع مستر أشرف ومس رشا والدرجات مقفلة.. إزاي تثبت تفوقك الحقيقي؟",
-        trackKey: "",
+        trackKey: "q5",
         imageUrl: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
         stickerText: "درس مستر أشرف & مس رشا 📝💯",
         roastText: "«مستر أشرف ومس رشا في بيتكم كانوا عارفين مين اللي مقفل ومين اللي عامل حركات! 🎓»",
@@ -1610,7 +1634,7 @@
       {
         category: "الـ Fake Ego والتنمر الدفاعي",
         text: "لما صاحبك يعمل موقع أو إنجاز برمجي جامد.. الرد التلقائي للمقموص بيكون إيه؟",
-        trackKey: "",
+        trackKey: "q6",
         imageUrl: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80",
         stickerText: "نام مقموص ومحروق 😡🔥",
         roastText: "«تقوله (فكك ده أي حد بيعملها) وتنام محروق.. بينما الإنجاز الحقيقي يستحق تحية وتشجيع!»",
@@ -1628,7 +1652,7 @@
       {
         category: "الهزار بالإيد والسيطرة",
         text: "لما تحب تفتح حوار مع صاحبك الهادي وتكسر المسافات.. بتعمل إيه؟",
-        trackKey: "",
+        trackKey: "q7",
         imageUrl: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80",
         stickerText: "قعدة الرجولة والنقاش ☕🤝",
         roastText: "«الهزار بالإيد بيخلص بدري.. بس الاحترام والرجولة هما اللي بيعيشوا يا أسامة!»",
@@ -1677,10 +1701,9 @@
       imageStickerBadge.textContent = q.stickerText;
       quizMemoryText.textContent = q.roastText;
 
-      // Handle Voiceover visibility & auto playback
+      // Handle AI Voiceover auto playback on entering question
       if (q.trackKey && VOICE_OVER_TRACKS[q.trackKey]) {
         playVoiceoverBtn.style.display = "flex";
-        // Auto play on entering question
         voice.playTrack(VOICE_OVER_TRACKS[q.trackKey]);
       } else {
         playVoiceoverBtn.style.display = "none";
@@ -1826,6 +1849,7 @@
     runawayBtn.addEventListener('click', () => {
       if (escapeAttempts >= ESCAPE_LIMIT) {
         sound.play('unlock');
+        voice.stop();
         runawayBtn.textContent = "جاري فك التشفير... 🔓⚡";
         setTimeout(() => {
           showScreen('screen2');
@@ -2069,7 +2093,7 @@
     }
 
     /* ==========================================================================
-       STAGE 5: CINEMATIC MATRIX FINAL REVEAL
+       STAGE 5: CINEMATIC MATRIX FINAL REVEAL + AI SPEECH
        ========================================================================== */
     const matrixCanvas = document.getElementById('matrixCanvas');
     const mCtx = matrixCanvas.getContext('2d');
@@ -2108,6 +2132,7 @@
     function startCinematicReveal() {
       initMatrixRain();
       sound.play('matrixAmbient');
+      voice.playTrack(VOICE_OVER_TRACKS.reveal);
 
       if (typeof confetti === 'function') {
         confetti({
@@ -2132,7 +2157,7 @@
         setTimeout(() => {
           l.classList.add('visible');
           sound.playFallbackSynth('coin');
-        }, 600 + idx * 1100);
+        }, 600 + idx * 1400);
       });
     }
 
@@ -2143,6 +2168,7 @@
       coderScore = 0;
       showoffScoreDisplay.textContent = '0';
       coderScoreDisplay.textContent = '0';
+      voice.stop();
 
       runawayBtn.textContent = ESCAPE_BUTTON_TEXTS[0];
       runawayBtn.classList.remove('frozen');
