@@ -242,8 +242,48 @@
     }
 
     /* ==========================================================================
-       DYNAMIC MEMORY ROAST TICKER
+       REAL MEME IMAGE CARD STYLING
        ========================================================================== */
+    .question-image-box {
+      width: 100%;
+      height: 220px;
+      background: #eee;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-sm);
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .question-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .question-image-box:hover img {
+      transform: scale(1.03);
+    }
+    .image-sticker-badge {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      background: var(--color-yellow);
+      border: 2px solid #000;
+      box-shadow: 3px 3px 0px #000;
+      font-weight: 900;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      z-index: 5;
+      transform: rotate(-2deg);
+    }
+
+    /* Dynamic Memory Roast Ticker */
     .memory-commentary-box {
       width: 100%;
       background: #fff;
@@ -295,23 +335,34 @@
       line-height: 1.4;
       color: #1a1a1a;
     }
-    .replay-voice-btn {
-      background: var(--color-yellow);
+    .voice-control-btn {
+      background: var(--color-green);
+      color: #000;
       border: 2px solid #000;
       border-radius: 6px;
       box-shadow: 2px 2px 0px #000;
-      padding: 6px 12px;
+      padding: 6px 14px;
       font-weight: 900;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
       white-space: nowrap;
+      transition: all 0.15s ease;
     }
-    .replay-voice-btn:hover {
+    .voice-control-btn:hover {
       transform: translate(1px, 1px);
       box-shadow: 1px 1px 0px #000;
+      background: #4ade80;
+    }
+    .voice-control-btn.playing {
+      background: var(--color-yellow);
+      animation: pulsePlay 1s infinite alternate;
+    }
+    @keyframes pulsePlay {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
     }
 
     /* ==========================================================================
@@ -385,7 +436,6 @@
       margin-top: 8px;
     }
 
-    /* Escape dots indicator */
     .escape-dots-row {
       display: flex;
       justify-content: center;
@@ -408,7 +458,7 @@
     }
 
     /* ==========================================================================
-       STAGE 2: PSYCHOLOGICAL QUESTIONS & MEME ILLUSTRATIONS
+       STAGE 2: PSYCHOLOGICAL QUESTIONS
        ========================================================================== */
     .quiz-progress-bar-wrap {
       width: 100%;
@@ -485,41 +535,6 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 14px;
-    }
-
-    /* Question Sarcastic Illustration Box */
-    .question-illustration-container {
-      width: 100%;
-      background: #faf8f0;
-      border: var(--border-thick);
-      box-shadow: var(--shadow-solid);
-      border-radius: var(--radius-sm);
-      padding: 14px;
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .illustration-svg-box {
-      width: 100%;
-      max-height: 150px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .illustration-badge-caption {
-      position: absolute;
-      bottom: 6px;
-      right: 10px;
-      background: var(--color-yellow);
-      border: 2px solid #000;
-      font-weight: 900;
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 4px;
-      box-shadow: 2px 2px 0px #000;
     }
 
     .question-text {
@@ -930,7 +945,7 @@
     </div>
   </div>
 
-  <!-- Floating Audio Controls Header -->
+  <!-- Floating Action Bar -->
   <div class="top-action-bar">
     <!-- Sound SFX Toggle -->
     <button id="soundToggle" class="brutal-badge-btn" aria-label="تبديل المؤثرات الصوتية">
@@ -987,14 +1002,11 @@
             «أهلاً يا أسامة في خزينتك السرية.. متفتكرش إن حركات السلم وكاميرات التكنو عدت بالساهل! دوس وافتح لو قلبك جايبك!»
           </div>
         </div>
-        <button id="replayLandingVoBtn" class="replay-voice-btn" title="إعادة تشغيل الفويس أوفر">
-          🔁 تشغيل الصوت
-        </button>
       </div>
     </section>
 
     <!-- ========================================================================
-         SCREEN 2: PSYCHOLOGICAL QUESTIONS & MEME ILLUSTRATIONS
+         SCREEN 2: PSYCHOLOGICAL QUESTIONS & REAL MEME IMAGES
          ======================================================================== -->
     <section id="screen2" class="game-screen">
       <!-- Progress Bar -->
@@ -1027,17 +1039,18 @@
             <span class="sticker-badge yellow" id="questionBadge">السؤال 1 من 7</span>
             <span style="font-weight:900; color:#555;" id="questionTopic">الموبايلات والتكنولوجيا</span>
           </div>
-          <button id="replayQuestionVoBtn" class="replay-voice-btn">
-            🎙️ إعادة الصوت
+          
+          <!-- Voiceover Playback Control Button -->
+          <button id="playVoiceoverBtn" class="voice-control-btn">
+            <span>🎙️ فويس أوفر يونس</span>
+            <span id="voPlayIcon">▶️</span>
           </button>
         </div>
 
-        <!-- Question Sarcastic Illustration Box -->
-        <div class="question-illustration-container">
-          <div class="illustration-svg-box" id="questionIllustration">
-            <!-- Dynamic SVG Meme illustration loaded here -->
-          </div>
-          <div class="illustration-badge-caption" id="illustrationCaption">وثيقة مسربة من الأرشيف 📸</div>
+        <!-- Real Meme Image Container -->
+        <div class="question-image-box" id="questionImageBox">
+          <img id="questionImg" src="" alt="Meme Image" loading="lazy" />
+          <div class="image-sticker-badge" id="imageStickerBadge">📸 وثيقة حصرية</div>
         </div>
 
         <h2 class="question-text" id="questionText">
@@ -1202,7 +1215,7 @@
             <div class="speech-line highlight" id="line4">
               اللي بيقلد ترندات التيك توك.. واللي بيصنع التكنولوجيا بكود حقيقي.
             </div>
-            <div class="speech-line" id="line5">
+            <div class="speech-line highlight" id="line5">
               الموقع ده اتبرمج من الصفر مخصوص عشانك..
             </div>
             <div class="speech-line highlight" id="line6">
@@ -1237,21 +1250,20 @@
   </div>
 
   <!-- ==========================================================================
-       JAVASCRIPT ENGINE: AUDIO SFX + VOICEOVER + GAME LOGIC
+       JAVASCRIPT ENGINE: AUDIO SFX + ACCURATE VOICEOVER + REAL MEMES
        ========================================================================== -->
   <script>
     /* ==========================================================================
-       🎙️ YOUNES VOICEOVER AUDIO MAPPING
+       🎙️ EXACT VOICEOVER MAPPING
        ========================================================================== */
     const VOICE_OVER_TRACKS = {
-      landing: "audio/landing.mp3",
-      q1: "audio/q1.mp3",
-      q2: "audio/q2.mp3",
-      q3: "audio/q3.mp3"
+      q1: "audio/q1.mp3",  // السؤال الأول (الموبايلات والتكنو كامون 30)
+      q2: "audio/q2.mp3",  // السؤال الثاني (السلم وباقة النت)
+      q3: "audio/q3.mp3"   // السؤال الثالث (جوانتي فري فاير)
     };
 
     /* ==========================================================================
-       REAL ONLINE AUDIO SFX (FETCHED FROM RELIABLE CDNS)
+       REAL ONLINE AUDIO SFX
        ========================================================================== */
     const ONLINE_SFX = {
       whoosh: "https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3",
@@ -1344,18 +1356,45 @@
       constructor() {
         this.enabled = true;
         this.currentAudio = null;
+        this.isPlaying = false;
       }
 
-      playTrack(trackUrl) {
+      playTrack(trackUrl, onEndCallback = null) {
         if (!this.enabled || !trackUrl) return;
         this.stop();
 
         try {
           this.currentAudio = new Audio(trackUrl);
+          this.isPlaying = true;
+          updateVoiceButtonUI(true);
+
+          this.currentAudio.onended = () => {
+            this.isPlaying = false;
+            updateVoiceButtonUI(false);
+            if (onEndCallback) onEndCallback();
+          };
+
+          this.currentAudio.onerror = () => {
+            this.isPlaying = false;
+            updateVoiceButtonUI(false);
+          };
+
           this.currentAudio.play().catch(() => {
-            // Silently ignore if file is absent
+            this.isPlaying = false;
+            updateVoiceButtonUI(false);
           });
-        } catch (e) {}
+        } catch (e) {
+          this.isPlaying = false;
+          updateVoiceButtonUI(false);
+        }
+      }
+
+      toggle(trackUrl) {
+        if (this.isPlaying && this.currentAudio) {
+          this.stop();
+        } else if (trackUrl) {
+          this.playTrack(trackUrl);
+        }
       }
 
       stop() {
@@ -1364,10 +1403,33 @@
           this.currentAudio.currentTime = 0;
           this.currentAudio = null;
         }
+        this.isPlaying = false;
+        updateVoiceButtonUI(false);
       }
     }
 
     const voice = new VoiceoverManager();
+
+    const playVoiceoverBtn = document.getElementById('playVoiceoverBtn');
+    const voPlayIcon = document.getElementById('voPlayIcon');
+
+    function updateVoiceButtonUI(isPlaying) {
+      if (!playVoiceoverBtn) return;
+      if (isPlaying) {
+        playVoiceoverBtn.classList.add('playing');
+        voPlayIcon.textContent = '⏸️';
+      } else {
+        playVoiceoverBtn.classList.remove('playing');
+        voPlayIcon.textContent = '▶️';
+      }
+    }
+
+    playVoiceoverBtn.addEventListener('click', () => {
+      const q = QUESTIONS_DATA[currentQuestionIdx];
+      if (q && q.trackKey && VOICE_OVER_TRACKS[q.trackKey]) {
+        voice.toggle(VOICE_OVER_TRACKS[q.trackKey]);
+      }
+    });
 
     // Top action bar button listeners
     const soundToggleBtn = document.getElementById('soundToggle');
@@ -1451,46 +1513,16 @@
       }
     }
 
-    document.getElementById('replayLandingVoBtn').addEventListener('click', () => {
-      voice.playTrack(VOICE_OVER_TRACKS.landing);
-    });
-
-    document.getElementById('replayQuestionVoBtn').addEventListener('click', () => {
-      playCurrentQuestionVoice();
-    });
-
     /* ==========================================================================
-       THE 7 QUESTIONS WITH BESPOKE MEME ILLUSTRATIONS
+       THE 7 QUESTIONS WITH REAL WEB MEME IMAGES
        ========================================================================== */
     const QUESTIONS_DATA = [
       {
         category: "الموبايلات والتكنولوجيا",
         text: "لما تحب تجيب موبايل جديد.. الهدف الأساسي بيكون إيه؟",
         trackKey: "q1",
-        illustrationSvg: `
-          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="15" width="80" height="100" rx="10" fill="#1e293b" stroke="#000" stroke-width="3"/>
-            <rect x="25" y="22" width="70" height="35" rx="6" fill="#000" stroke="#ffd026" stroke-width="2"/>
-            <circle cx="40" cy="35" r="9" fill="#ff4d4d" stroke="#fff" stroke-width="2"/>
-            <circle cx="62" cy="35" r="9" fill="#ffd026" stroke="#fff" stroke-width="2"/>
-            <circle cx="78" cy="45" r="6" fill="#00e5ff" stroke="#fff" stroke-width="2"/>
-            <text x="60" y="80" fill="#ffd026" font-size="10" font-weight="900" text-anchor="middle">CAMON 30</text>
-            <text x="60" y="95" fill="#fff" font-size="8" font-weight="700" text-anchor="middle">📸 500MP SHOT</text>
-            <path d="M5 40 L20 30 L20 70 Z" fill="#ffd026" stroke="#000" stroke-width="2"/>
-            <path d="M100 30 L115 40 L100 70 Z" fill="#ffd026" stroke="#000" stroke-width="2"/>
-
-            <rect x="125" y="50" width="30" height="25" rx="4" fill="#ff4d4d" stroke="#000" stroke-width="2"/>
-            <text x="140" y="67" fill="#fff" font-size="12" font-weight="900" text-anchor="middle">VS</text>
-
-            <rect x="180" y="15" width="80" height="100" rx="10" fill="#0f172a" stroke="#000" stroke-width="3"/>
-            <rect x="185" y="25" width="70" height="70" rx="4" fill="#18181b" stroke="#23e069" stroke-width="1.5"/>
-            <text x="190" y="42" fill="#23e069" font-family="monospace" font-size="9" font-weight="700">&gt; code.js</text>
-            <text x="190" y="58" fill="#38bdf8" font-family="monospace" font-size="8">build(Future);</text>
-            <text x="190" y="74" fill="#e2e8f0" font-family="monospace" font-size="8">git push ✨</text>
-            <text x="220" y="105" fill="#23e069" font-size="9" font-weight="900" text-anchor="middle">HOT 70 PRO</text>
-          </svg>
-        `,
-        caption: "مركبة الفضاء تكنو كامون 30 🛸 ضد كود المستقبل 💻",
+        imageUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80",
+        stickerText: "مركبة الفضاء كامون 30 🛸📸",
         roastText: "«كاميرات الكامون 30 بتصور القمر.. بس مش هتعمل لك سطر كود واحد يحل مستقبلك يا أسامة! 😂»",
         options: [
           {
@@ -1507,18 +1539,8 @@
         category: "السلم وباقة النت",
         text: "إيه قمة الاستعراض والروشنة وأنت طالع سلم الدرس؟",
         trackKey: "q2",
-        illustrationSvg: `
-          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 115 L60 115 L60 90 L100 90 L100 65 L140 65 L140 40 L180 40 L180 15 L220 15" fill="none" stroke="#000" stroke-width="4"/>
-            <circle cx="100" cy="45" r="14" fill="#ffd026" stroke="#000" stroke-width="3"/>
-            <text x="100" y="50" font-size="12" text-anchor="middle">😎</text>
-            <rect x="114" y="35" width="12" height="20" rx="2" fill="#ff4d4d" stroke="#000" stroke-width="1.5"/>
-            <rect x="135" y="15" width="130" height="32" rx="6" fill="#fff" stroke="#000" stroke-width="2"/>
-            <text x="200" y="30" fill="#000" font-size="9" font-weight="800" text-anchor="middle">«ألو يا بيزنس مان..»</text>
-            <text x="200" y="42" fill="#ff4d4d" font-size="8" font-weight="900" text-anchor="middle">⚠️ باقة النت انتهت!</text>
-          </svg>
-        `,
-        caption: "فضيحة مكالمة السلم والباقة اللي شيعت 📶🪜",
+        imageUrl: "https://images.unsplash.com/photo-1520333789090-1afc82db536a?auto=format&fit=crop&w=600&q=80",
+        stickerText: "مكالمة السلم والباقة الضايعة 📶🔥",
         roastText: "«الباقة راحت في أول دور ومكمل المكالمة في الخيال.. السلم كان شاهد على كل حركة! 🤡»",
         options: [
           {
@@ -1535,23 +1557,8 @@
         category: "الجيمنج وبتاع الصوابع",
         text: "السر الحقيقي للاحتراف في ألعاب الموبايل (فري فاير وببجي) هو...؟",
         trackKey: "q3",
-        illustrationSvg: `
-          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
-            <rect x="30" y="25" width="70" height="85" rx="8" fill="#1e1e1e" stroke="#000" stroke-width="3"/>
-            <rect x="42" y="15" width="18" height="35" rx="4" fill="#3b82f6" stroke="#ffd026" stroke-width="2"/>
-            <rect x="66" y="18" width="18" height="35" rx="4" fill="#3b82f6" stroke="#ffd026" stroke-width="2"/>
-            <text x="65" y="75" fill="#ffd026" font-size="9" font-weight="900" text-anchor="middle">🧤 جوانتي فري فاير</text>
-            <text x="65" y="92" fill="#fff" font-size="8" font-weight="700" text-anchor="middle">كمبرة 100%</text>
-
-            <rect x="130" y="30" width="135" height="40" rx="8" fill="#fff" stroke="#000" stroke-width="2"/>
-            <text x="197" y="47" fill="#000" font-size="9.5" font-weight="900" text-anchor="middle">«ادخل 1v1 روم ونبي!»</text>
-            <text x="197" y="62" fill="#ff4d4d" font-size="8.5" font-weight="800" text-anchor="middle">عشان لقطة وهمية 🤡</text>
-
-            <circle cx="200" cy="95" r="16" fill="#23e069" stroke="#000" stroke-width="2"/>
-            <text x="200" y="100" font-size="14" text-anchor="middle">💻</text>
-          </svg>
-        `,
-        caption: "جوانتي الصوابع الأسطوري والتحايل على الرومات 🧤🔥",
+        imageUrl: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80",
+        stickerText: "جوانتي فري فاير والكمبرة 🧤🎮",
         roastText: "«الجوانتي القماش مش هيصنع منك بطل فري فاير.. البرمجة هي اللي بتصنع اللعبة نفسها يا أسامة!»",
         options: [
           {
@@ -1568,18 +1575,8 @@
         category: "الترندات وحركات التيك توك",
         text: "لما ترند جديد ينزل على التيك توك.. التصرف الصحيح إيه؟",
         trackKey: "",
-        illustrationSvg: `
-          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="70" cy="35" r="14" fill="#ffd026" stroke="#000" stroke-width="3"/>
-            <text x="70" y="40" font-size="13" text-anchor="middle">🤪</text>
-            <path d="M70 50 L70 85 M70 60 L40 45 M70 60 L100 75 M70 85 L50 115 M70 85 L90 115" stroke="#000" stroke-width="4" stroke-linecap="round"/>
-            <rect x="130" y="25" width="130" height="75" rx="8" fill="#18181b" stroke="#000" stroke-width="3"/>
-            <text x="195" y="50" fill="#00e5ff" font-size="12" font-weight="900" text-anchor="middle">🎵 TIKTOK TREND</text>
-            <text x="195" y="70" fill="#ff4d4d" font-size="9.5" font-weight="800" text-anchor="middle">رقصة مفاجئة في نص القعدة</text>
-            <text x="195" y="86" fill="#ffd026" font-size="8" text-anchor="middle">«عشان أبان كول وصايع»</text>
-          </svg>
-        `,
-        caption: "رقصات التيك توك المفاجئة في نص القعدة 🕺🎵",
+        imageUrl: "https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=600&q=80",
+        stickerText: "رقصة التيك توك في نص الصالة 🕺🎵",
         roastText: "«الرقصة المفاجئة في نص القعدة.. كنت محتاج فيها إعادة ضبط مصنع يا أسامة!»",
         options: [
           {
@@ -1596,18 +1593,8 @@
         category: "التنافس الدراسي والتفوق",
         text: "أنت في الدرس مع مستر أشرف ومس رشا والدرجات مقفلة.. إزاي تثبت تفوقك الحقيقي؟",
         trackKey: "",
-        illustrationSvg: `
-          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
-            <rect x="25" y="15" width="230" height="95" rx="6" fill="#14532d" stroke="#000" stroke-width="3"/>
-            <text x="140" y="40" fill="#fef08a" font-size="12" font-weight="900" text-anchor="middle">📚 درس مستر أشرف & مس رشا</text>
-            <line x1="40" y1="50" x2="240" y2="50" stroke="#fef08a" stroke-width="2"/>
-            <text x="80" y="75" fill="#fff" font-size="10" font-weight="800">أسامة: 99/100 📝</text>
-            <text x="80" y="95" fill="#86efac" font-size="10" font-weight="800">يونس: 100/100 + كود 🚀</text>
-            <circle cx="215" cy="80" r="16" fill="#ffd026" stroke="#000" stroke-width="2"/>
-            <text x="215" y="85" font-size="14" text-anchor="middle">👨‍🏫</text>
-          </svg>
-        `,
-        caption: "سبورة مستر أشرف ومس رشا والدرجات المقفلة 📝💯",
+        imageUrl: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80",
+        stickerText: "درس مستر أشرف & مس رشا 📝💯",
         roastText: "«مستر أشرف ومس رشا في بيتكم كانوا عارفين مين اللي مقفل ومين اللي عامل حركات! 🎓»",
         options: [
           {
@@ -1624,24 +1611,8 @@
         category: "الـ Fake Ego والتنمر الدفاعي",
         text: "لما صاحبك يعمل موقع أو إنجاز برمجي جامد.. الرد التلقائي للمقموص بيكون إيه؟",
         trackKey: "",
-        illustrationSvg: `
-          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
-            <rect x="25" y="20" width="105" height="85" rx="8" fill="#fee2e2" stroke="#ff4d4d" stroke-width="2.5"/>
-            <circle cx="75" cy="50" r="14" fill="#ff4d4d" stroke="#000" stroke-width="2"/>
-            <text x="75" y="55" font-size="12" text-anchor="middle">😡</text>
-            <text x="75" y="80" fill="#991b1b" font-size="8.5" font-weight="900" text-anchor="middle">«عادي أي حد بيعملها»</text>
-            <text x="75" y="93" fill="#b91c1c" font-size="7.5" text-anchor="middle">ونام متغاظ ومحروق 🔥</text>
-
-            <rect x="150" y="20" width="105" height="85" rx="8" fill="#dcfce7" stroke="#23e069" stroke-width="2.5"/>
-            <circle cx="185" cy="50" r="12" fill="#23e069" stroke="#000" stroke-width="2"/>
-            <circle cx="220" cy="50" r="12" fill="#ffd026" stroke="#000" stroke-width="2"/>
-            <text x="185" y="54" font-size="10" text-anchor="middle">💻</text>
-            <text x="220" y="54" font-size="10" text-anchor="middle">🤝</text>
-            <text x="202" y="80" fill="#166534" font-size="9" font-weight="900" text-anchor="middle">«عاش يا بطل!»</text>
-            <text x="202" y="93" fill="#15803d" font-size="7.5" text-anchor="middle">نتعلم ونتطور مع بعض 🚀</text>
-          </svg>
-        `,
-        caption: "القمصة والنوم المحروق ضد الرجولة والتطور المشترك 🔥🤝",
+        imageUrl: "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80",
+        stickerText: "نام مقموص ومحروق 😡🔥",
         roastText: "«تقوله (فكك ده أي حد بيعملها) وتنام محروق.. بينما الإنجاز الحقيقي يستحق تحية وتشجيع!»",
         options: [
           {
@@ -1658,20 +1629,8 @@
         category: "الهزار بالإيد والسيطرة",
         text: "لما تحب تفتح حوار مع صاحبك الهادي وتكسر المسافات.. بتعمل إيه؟",
         trackKey: "",
-        illustrationSvg: `
-          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
-            <rect x="25" y="20" width="105" height="85" rx="8" fill="#fff" stroke="#000" stroke-width="2"/>
-            <text x="77" y="45" font-size="20" text-anchor="middle">🤜💥</text>
-            <text x="77" y="75" fill="#ff4d4d" font-size="9" font-weight="900" text-anchor="middle">تمد إيدك بالزق</text>
-            <text x="77" y="90" fill="#666" font-size="7.5" text-anchor="middle">حركات شقاوة عيال</text>
-
-            <rect x="150" y="20" width="105" height="85" rx="8" fill="#fff" stroke="#000" stroke-width="2"/>
-            <text x="202" y="45" font-size="20" text-anchor="middle">☕🤝</text>
-            <text x="202" y="75" fill="#23e069" font-size="9" font-weight="900" text-anchor="middle">نقاش رجولة وقيمة</text>
-            <text x="202" y="90" fill="#666" font-size="7.5" text-anchor="middle">احترام متبادل وتقدير</text>
-          </svg>
-        `,
-        caption: "الزق والهزار بالإيد ضد قعدة الرجولة والنقاش ☕🤝",
+        imageUrl: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80",
+        stickerText: "قعدة الرجولة والنقاش ☕🤝",
         roastText: "«الهزار بالإيد بيخلص بدري.. بس الاحترام والرجولة هما اللي بيعيشوا يا أسامة!»",
         options: [
           {
@@ -1697,21 +1656,13 @@
     const questionBadge = document.getElementById('questionBadge');
     const questionTopic = document.getElementById('questionTopic');
     const questionText = document.getElementById('questionText');
-    const questionIllustration = document.getElementById('questionIllustration');
-    const illustrationCaption = document.getElementById('illustrationCaption');
+    const questionImg = document.getElementById('questionImg');
+    const imageStickerBadge = document.getElementById('imageStickerBadge');
     const optionsContainer = document.getElementById('optionsContainer');
     const feedbackToast = document.getElementById('feedbackToast');
     const toastIcon = document.getElementById('toastIcon');
     const toastMsg = document.getElementById('toastMsg');
     const quizMemoryText = document.getElementById('quizMemoryText');
-    const replayQuestionVoBtn = document.getElementById('replayQuestionVoBtn');
-
-    function playCurrentQuestionVoice() {
-      const q = QUESTIONS_DATA[currentQuestionIdx];
-      if (q.trackKey && VOICE_OVER_TRACKS[q.trackKey]) {
-        voice.playTrack(VOICE_OVER_TRACKS[q.trackKey]);
-      }
-    }
 
     function renderCurrentQuestion() {
       isAnsweringLocked = false;
@@ -1722,16 +1673,18 @@
       questionBadge.textContent = `السؤال ${currentQuestionIdx + 1} من ${QUESTIONS_DATA.length}`;
       questionTopic.textContent = q.category;
       questionText.textContent = q.text;
-      questionIllustration.innerHTML = q.illustrationSvg;
-      illustrationCaption.textContent = q.caption;
+      questionImg.src = q.imageUrl;
+      imageStickerBadge.textContent = q.stickerText;
       quizMemoryText.textContent = q.roastText;
 
-      // Show/hide replay button based on whether track exists
+      // Handle Voiceover visibility & auto playback
       if (q.trackKey && VOICE_OVER_TRACKS[q.trackKey]) {
-        replayQuestionVoBtn.style.display = "flex";
-        playCurrentQuestionVoice();
+        playVoiceoverBtn.style.display = "flex";
+        // Auto play on entering question
+        voice.playTrack(VOICE_OVER_TRACKS[q.trackKey]);
       } else {
-        replayQuestionVoBtn.style.display = "none";
+        playVoiceoverBtn.style.display = "none";
+        voice.stop();
       }
 
       // Render Options
@@ -1761,6 +1714,9 @@
     function handleOptionSelected(option, btnElement) {
       if (isAnsweringLocked) return;
       isAnsweringLocked = true;
+
+      // Stop any playing voiceover on answer
+      voice.stop();
 
       // Disable buttons
       document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
