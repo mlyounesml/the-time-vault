@@ -1,0 +1,2209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>THE TIME VAULT ⏱️ | نسخة أسامة: كشف المستور</title>
+
+  <!-- Google Fonts: Cairo, Tajawal, Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@500;700;900&family=Fira+Code:wght@700&display=swap" rel="stylesheet" />
+
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       NEO-BRUTALISM DESIGN SYSTEM
+       ========================================================================== */
+    :root {
+      --bg-canvas: #f7f4ea;
+      --color-black: #121212;
+      --color-yellow: #ffd026;
+      --color-green: #23e069;
+      --color-red: #ff4d4d;
+      --color-cyan: #00e5ff;
+      --color-purple: #c084fc;
+      --color-white: #ffffff;
+      
+      --border-thick: 3px solid var(--color-black);
+      --border-mega: 4px solid var(--color-black);
+      --shadow-solid: 5px 5px 0px var(--color-black);
+      --shadow-hover: 2px 2px 0px var(--color-black);
+      --shadow-mega: 8px 8px 0px var(--color-black);
+      
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--color-black);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      position: relative;
+      background-image: radial-gradient(#121212 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+    }
+
+    /* Top Caution Marquee */
+    .marquee-container {
+      width: 100%;
+      background: var(--color-yellow);
+      border-bottom: var(--border-thick);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 8px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 0 var(--color-black);
+    }
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 26s linear infinite;
+      font-weight: 900;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0%); }
+    }
+
+    /* Floating Audio Controls Header */
+    .top-action-bar {
+      position: fixed;
+      top: 55px;
+      left: 15px;
+      right: 15px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 99;
+    }
+    .top-action-bar button {
+      pointer-events: auto;
+    }
+
+    .brutal-badge-btn {
+      background: var(--color-white);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-weight: 900;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+    .brutal-badge-btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: var(--shadow-hover);
+      background: var(--color-yellow);
+    }
+
+    /* Main Viewport Container */
+    .app-viewport {
+      width: 100%;
+      max-width: 860px;
+      padding: 30px 16px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+    }
+
+    /* Common Card Styles */
+    .brutal-card {
+      background: var(--color-white);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-mega);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      width: 100%;
+      position: relative;
+      margin-bottom: 24px;
+      transition: transform 0.2s ease;
+    }
+
+    .sticker-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--color-yellow);
+      border: var(--border-thick);
+      box-shadow: 3px 3px 0px var(--color-black);
+      border-radius: var(--radius-sm);
+      font-weight: 900;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+      margin-bottom: 12px;
+    }
+    .sticker-badge.red {
+      background: var(--color-red);
+      color: var(--color-white);
+      transform: rotate(2deg);
+    }
+    .sticker-badge.green {
+      background: var(--color-green);
+      transform: rotate(-1deg);
+    }
+    .sticker-badge.cyan {
+      background: var(--color-cyan);
+      transform: rotate(1.5deg);
+    }
+
+    /* Buttons */
+    .brutal-btn {
+      background: var(--color-yellow);
+      color: var(--color-black);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-sm);
+      padding: 14px 24px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s;
+      text-decoration: none;
+      text-align: center;
+      touch-action: manipulation;
+    }
+    .brutal-btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: var(--shadow-hover);
+      background: #ffdb4d;
+    }
+    .brutal-btn:active {
+      transform: translate(4px, 4px);
+      box-shadow: 0px 0px 0px var(--color-black);
+    }
+    .brutal-btn.green {
+      background: var(--color-green);
+    }
+    .brutal-btn.green:hover {
+      background: #39ec7c;
+    }
+    .brutal-btn.red {
+      background: var(--color-red);
+      color: var(--color-white);
+    }
+    .brutal-btn.cyan {
+      background: var(--color-cyan);
+    }
+
+    /* Screen Views */
+    .game-screen {
+      display: none;
+      width: 100%;
+      animation: screenFadeIn 0.35s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    }
+    .game-screen.active {
+      display: block;
+    }
+    @keyframes screenFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ==========================================================================
+       DYNAMIC MEMORY ROAST TICKER (شريط الفضائح والذكريات)
+       ========================================================================== */
+    .memory-commentary-box {
+      width: 100%;
+      background: #fff;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      background-image: repeating-linear-gradient(45deg, #fff9e6, #fff9e6 10px, #ffffff 10px, #ffffff 20px);
+      transition: all 0.3s ease;
+    }
+    .memory-avatar {
+      width: 52px;
+      height: 52px;
+      min-width: 52px;
+      border-radius: 50%;
+      background: var(--color-yellow);
+      border: var(--border-thick);
+      box-shadow: 2px 2px 0px #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      animation: avatarBounce 2s infinite ease-in-out;
+    }
+    @keyframes avatarBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(4deg); }
+    }
+    .memory-body {
+      flex: 1;
+    }
+    .memory-tag {
+      font-size: 0.8rem;
+      font-weight: 900;
+      color: #b45309;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+    .memory-text {
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.35;
+      color: #1a1a1a;
+      transition: opacity 0.2s ease;
+    }
+    .replay-voice-btn {
+      background: var(--color-yellow);
+      border: 2px solid #000;
+      border-radius: 6px;
+      box-shadow: 2px 2px 0px #000;
+      padding: 6px 12px;
+      font-weight: 900;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .replay-voice-btn:hover {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0px #000;
+    }
+
+    /* ==========================================================================
+       STAGE 1: LANDING SCREEN & ESCAPING BUTTON
+       ========================================================================== */
+    .landing-hero {
+      text-align: center;
+      padding: 36px 20px;
+      background: #fffdf5;
+    }
+    .landing-title {
+      font-size: 2.3rem;
+      font-weight: 900;
+      line-height: 1.25;
+      margin: 14px 0 10px;
+      text-shadow: 2px 2px 0px var(--color-yellow);
+    }
+    .landing-subtitle {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #4b4b4b;
+      margin-bottom: 20px;
+    }
+    .classified-stamp {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      border: 3px dashed var(--color-red);
+      color: var(--color-red);
+      padding: 4px 10px;
+      font-weight: 900;
+      font-size: 0.8rem;
+      transform: rotate(-12deg);
+      border-radius: 4px;
+    }
+
+    .escape-arena {
+      width: 100%;
+      height: 290px;
+      background: #faf8f0;
+      border: 3px dashed var(--color-black);
+      border-radius: var(--radius-md);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 18px 0;
+    }
+    #runawayBtn {
+      position: absolute;
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 10;
+      white-space: nowrap;
+      font-size: 1.15rem;
+      padding: 16px 28px;
+    }
+    #runawayBtn.frozen {
+      animation: readyPulse 1s infinite alternate;
+      background: var(--color-green);
+      cursor: pointer;
+    }
+    @keyframes readyPulse {
+      0% { transform: scale(1); box-shadow: var(--shadow-solid); }
+      100% { transform: scale(1.06); box-shadow: var(--shadow-mega); }
+    }
+    .escape-hint {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #555;
+      margin-top: 8px;
+    }
+
+    /* ==========================================================================
+       STAGE 2: PSYCHOLOGICAL QUESTIONS & MEME ILLUSTRATIONS
+       ========================================================================== */
+    .quiz-progress-bar-wrap {
+      width: 100%;
+      background: var(--color-white);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-sm);
+      height: 22px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .quiz-progress-fill {
+      height: 100%;
+      width: 14%;
+      background: repeating-linear-gradient(
+        45deg,
+        var(--color-green),
+        var(--color-green) 12px,
+        #1ed15f 12px,
+        #1ed15f 24px
+      );
+      transition: width 0.3s ease;
+      border-left: var(--border-thick);
+    }
+
+    .scores-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 18px;
+    }
+    .score-box {
+      background: var(--color-white);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .score-box.showoff {
+      border-right: 8px solid var(--color-red);
+    }
+    .score-box.coder {
+      border-right: 8px solid var(--color-green);
+    }
+    .score-box-label {
+      font-size: 0.85rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .score-box-val {
+      font-size: 1.4rem;
+      font-weight: 900;
+      background: #eee;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 2px solid var(--color-black);
+    }
+
+    .question-card {
+      background: var(--color-white);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-mega);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      position: relative;
+    }
+    .question-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    /* Question Sarcastic Illustration Box */
+    .question-illustration-container {
+      width: 100%;
+      background: #faf8f0;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .illustration-svg-box {
+      width: 100%;
+      max-height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .illustration-badge-caption {
+      position: absolute;
+      bottom: 6px;
+      right: 10px;
+      background: var(--color-yellow);
+      border: 2px solid #000;
+      font-weight: 900;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0px #000;
+    }
+
+    .question-text {
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      color: var(--color-black);
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .option-btn {
+      background: #faf8f0;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      text-align: right;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+    .option-btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: var(--shadow-hover);
+      background: #fff;
+    }
+    .option-btn.selected-showoff {
+      background: #ffe5e5 !important;
+      border-color: var(--color-red) !important;
+      animation: shake 0.4s ease;
+    }
+    .option-btn.selected-coder {
+      background: #e8faed !important;
+      border-color: var(--color-green) !important;
+    }
+    .option-letter {
+      background: var(--color-black);
+      color: var(--color-white);
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    /* Feedback Modal Toast */
+    .feedback-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: var(--color-white);
+      border: var(--border-mega);
+      box-shadow: var(--shadow-mega);
+      border-radius: var(--radius-md);
+      padding: 16px 24px;
+      z-index: 200;
+      font-weight: 900;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 90%;
+      text-align: center;
+    }
+    .feedback-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    .feedback-toast.buzzer {
+      background: var(--color-red);
+      color: var(--color-white);
+    }
+    .feedback-toast.success {
+      background: var(--color-green);
+      color: var(--color-black);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    /* ==========================================================================
+       STAGE 3: PERSONALITY REPORT CARD
+       ========================================================================== */
+    .receipt-card {
+      background: #fff;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-mega);
+      border-radius: var(--radius-md);
+      padding: 32px 24px;
+      position: relative;
+      background-image: linear-gradient(#f1efe5 1px, transparent 1px);
+      background-size: 100% 28px;
+    }
+    .receipt-header {
+      text-align: center;
+      border-bottom: 3px dashed var(--color-black);
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    .receipt-title {
+      font-size: 1.9rem;
+      font-weight: 900;
+    }
+    .receipt-date {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #666;
+    }
+
+    .percentage-bars-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .metric-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .metric-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+    .metric-bar-outer {
+      width: 100%;
+      height: 24px;
+      background: #eee;
+      border: var(--border-thick);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      position: relative;
+    }
+    .metric-bar-inner {
+      height: 100%;
+      transition: width 1s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+    .metric-bar-inner.showoff-bar {
+      background: var(--color-red);
+    }
+    .metric-bar-inner.coder-bar {
+      background: var(--color-green);
+    }
+
+    .verdict-box {
+      background: var(--color-yellow);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .barcode-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-top: 3px dashed var(--color-black);
+      padding-top: 18px;
+      margin-top: 20px;
+    }
+    .barcode-svg {
+      width: 220px;
+      height: 48px;
+    }
+    .barcode-num {
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       STAGE 4: ARCADE MINI-GAME (CANVAS)
+       ========================================================================== */
+    .game-arena-card {
+      background: #121212;
+      color: #fff;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-mega);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .game-hud {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #222;
+      border: 2px solid #444;
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      margin-bottom: 12px;
+    }
+    .hud-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+    .hud-stat span {
+      color: var(--color-yellow);
+      font-family: 'Fira Code', monospace;
+      font-size: 1.3rem;
+    }
+    .hud-hp-bar {
+      width: 120px;
+      height: 16px;
+      background: #444;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .hud-hp-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--color-green);
+      transition: width 0.2s ease;
+    }
+
+    #gameCanvas {
+      background: #18181b;
+      border: 3px solid var(--color-white);
+      box-shadow: 4px 4px 0px var(--color-yellow);
+      border-radius: var(--radius-sm);
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+      touch-action: none;
+    }
+
+    .mobile-controls {
+      display: none;
+      width: 100%;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .touch-btn {
+      flex: 1;
+      padding: 16px;
+      background: var(--color-yellow);
+      color: var(--color-black);
+      border: var(--border-thick);
+      box-shadow: var(--shadow-solid);
+      border-radius: var(--radius-sm);
+      font-weight: 900;
+      font-size: 1.4rem;
+      text-align: center;
+      touch-action: manipulation;
+    }
+    .touch-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: var(--shadow-hover);
+    }
+    @media (max-width: 768px) {
+      .mobile-controls {
+        display: flex;
+      }
+    }
+
+    /* ==========================================================================
+       STAGE 5: THE FINAL REVEAL (CINEMATIC MATRIX TRIBUTE)
+       ========================================================================== */
+    .terminal-window {
+      background: #0d1117;
+      border: var(--border-thick);
+      box-shadow: var(--shadow-mega);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      width: 100%;
+      color: #58a6ff;
+    }
+    .terminal-titlebar {
+      background: #161b22;
+      border-bottom: 2px solid #30363d;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid #000;
+    }
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+    .terminal-path {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #8b949e;
+    }
+
+    .terminal-body {
+      padding: 32px 24px;
+      min-height: 380px;
+      color: #e6edf3;
+      position: relative;
+    }
+    .terminal-matrix-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .speech-container {
+      position: relative;
+      z-index: 2;
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.8;
+    }
+    .speech-line {
+      margin-bottom: 18px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .speech-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .speech-line.highlight {
+      color: var(--color-yellow);
+      font-size: 1.45rem;
+      font-weight: 900;
+      text-shadow: 0 0 12px rgba(255, 208, 38, 0.4);
+    }
+    .speech-line.author {
+      color: var(--color-green);
+      font-family: 'Fira Code', 'Cairo', monospace;
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-top: 28px;
+      border-top: 2px dashed #30363d;
+      padding-top: 16px;
+    }
+
+    .terminal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .landing-title { font-size: 1.75rem; }
+      .question-text { font-size: 1.15rem; }
+      .option-btn { font-size: 0.95rem; padding: 14px; }
+      .scores-strip { grid-template-columns: 1fr; }
+      .speech-container { font-size: 1.1rem; }
+      .speech-line.highlight { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Caution Marquee -->
+  <div class="marquee-container">
+    <div class="marquee-content">
+      ⚠️ ملف سري للغاية • وثائق رسمية محظورة • مخصص فقط للمدعو: أسامة • ممنوع دخول أصحاب القلوب الضعيفة • كشف مستور السلم وكاميرات التكنو كامون 30 • THE TIME VAULT ⚠️
+    </div>
+  </div>
+
+  <!-- Floating Audio Controls Header -->
+  <div class="top-action-bar">
+    <!-- Sound SFX Toggle -->
+    <button id="soundToggle" class="brutal-badge-btn" aria-label="تبديل المؤثرات الصوتية">
+      <span id="soundIcon">🔊</span>
+      <span id="soundText">المؤثرات: مفعلة</span>
+    </button>
+
+    <!-- Voiceover Narrator Toggle -->
+    <button id="voiceoverToggle" class="brutal-badge-btn" style="background: var(--color-yellow);">
+      <span id="voIcon">🎙️</span>
+      <span id="voText">الفويس أوفر: شغال</span>
+    </button>
+  </div>
+
+  <main class="app-viewport">
+
+    <!-- ========================================================================
+         SCREEN 1: LANDING SCREEN & ESCAPING BUTTON
+         ======================================================================== -->
+    <section id="screen1" class="game-screen active">
+      <div class="brutal-card landing-hero">
+        <div class="classified-stamp">TOP SECRET 🔴</div>
+        <div class="sticker-badge red">الملف السري المحظور</div>
+        <h1 class="landing-title">THE TIME VAULT<br/><span style="color:#d97706;">نسخة أسامة: كشف المستور</span></h1>
+        <p class="landing-subtitle">ذكريات، حركات استعراضية، وجوانتيات فري فاير مسجلة في الأرشيف الوطني</p>
+
+        <!-- Escape Arena -->
+        <div class="escape-arena" id="escapeArena">
+          <button id="runawayBtn" class="brutal-btn">
+            فتح الخزنة 🔓
+          </button>
+        </div>
+
+        <p class="escape-hint" id="escapeCounterText">
+          حاول تدوس على الزرار لفتح الخزنة والاطلاع على الملف السري! 🎯
+        </p>
+      </div>
+
+      <!-- Live Memory Roast Ticker Box -->
+      <div class="memory-commentary-box" id="memoryCommentaryBox">
+        <div class="memory-avatar" id="memoryAvatar">🎙️</div>
+        <div class="memory-body">
+          <div class="memory-tag" id="memoryAuthorTag">⚡ يونس (أرشيف السلم) يتحدث:</div>
+          <div class="memory-text" id="memoryText">
+            «أهلاً يا أسامة في خزينتك السرية.. متفتكرش إن حركات السلم وكاميرات التكنو عدت بالساهل! دوس وافتح لو قلبك جايبك!»
+          </div>
+        </div>
+        <button id="replayLandingVoBtn" class="replay-voice-btn" title="إعادة تشغيل الفويس أوفر">
+          🔁 تشغيل الصوت
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SCREEN 2: PSYCHOLOGICAL QUESTIONS & MEME ILLUSTRATIONS
+         ======================================================================== -->
+    <section id="screen2" class="game-screen">
+      <!-- Progress Bar -->
+      <div class="quiz-progress-bar-wrap">
+        <div id="quizProgressBar" class="quiz-progress-fill"></div>
+      </div>
+
+      <!-- Live Score Trackers -->
+      <div class="scores-strip">
+        <div class="score-box showoff">
+          <div class="score-box-label">
+            <div>حركات الشو والتيك توك 🤡</div>
+            <small style="color:#888;">استعراض السلم والكاميرات</small>
+          </div>
+          <div id="showoffScoreDisplay" class="score-box-val" style="color:var(--color-red);">0</div>
+        </div>
+        <div class="score-box coder">
+          <div class="score-box-label">
+            <div>عقلية المطور وبناء المستقبل 💻</div>
+            <small style="color:#888;">تركيز وكود حقيقي</small>
+          </div>
+          <div id="coderScoreDisplay" class="score-box-val" style="color:var(--color-green);">0</div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="question-card">
+        <div class="question-header-row">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="sticker-badge yellow" id="questionBadge">السؤال 1 من 7</span>
+            <span style="font-weight:900; color:#555;" id="questionTopic">الموبايلات والتكنولوجيا</span>
+          </div>
+          <button id="replayQuestionVoBtn" class="replay-voice-btn">
+            🎙️ إعادة الصوت
+          </button>
+        </div>
+
+        <!-- Question Sarcastic Illustration Box -->
+        <div class="question-illustration-container">
+          <div class="illustration-svg-box" id="questionIllustration">
+            <!-- Dynamic SVG Meme illustration loaded here -->
+          </div>
+          <div class="illustration-badge-caption" id="illustrationCaption">وثيقة مسربة من الأرشيف 📸</div>
+        </div>
+
+        <h2 class="question-text" id="questionText">
+          لما تحب تجيب موبايل جديد.. الهدف الأساسي بيكون إيه؟
+        </h2>
+
+        <div class="options-grid" id="optionsContainer">
+          <!-- Dynamic options rendered here -->
+        </div>
+      </div>
+
+      <!-- Live Memory Roast Ticker Box for Quiz -->
+      <div class="memory-commentary-box" id="quizMemoryBox">
+        <div class="memory-avatar" id="quizMemoryAvatar">🧠</div>
+        <div class="memory-body">
+          <div class="memory-tag" id="quizMemoryTag">💡 تحليل فوري:</div>
+          <div class="memory-text" id="quizMemoryText">
+            «فكر كويس يا أسامة قبل ما تجاوب.. عقلية التكنو كامون وجوانتي الفري فاير بتراقبك!»
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SCREEN 3: PERSONALITY REPORT CARD
+         ======================================================================== -->
+    <section id="screen3" class="game-screen">
+      <div class="receipt-card">
+        <div class="receipt-header">
+          <div class="sticker-badge red">شهادة الفضيحة المعتمدة</div>
+          <h2 class="receipt-title">تقرير الفحص النفسي والسلوكي</h2>
+          <div class="receipt-date">CASE FILE: #OSAMA-VAULT-2026</div>
+        </div>
+
+        <!-- Metric Percentages -->
+        <div class="percentage-bars-group">
+          <div class="metric-row">
+            <div class="metric-label-row">
+              <span>🤡 معدل الحركات الاستعراضية وتيك توك السلم:</span>
+              <span id="showoffPercentText" style="color:var(--color-red);">0%</span>
+            </div>
+            <div class="metric-bar-outer">
+              <div id="showoffBarFill" class="metric-bar-inner showoff-bar" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-label-row">
+              <span>💻 الوعي البرمجي وبناء المستقبل:</span>
+              <span id="coderPercentText" style="color:var(--color-green);">0%</span>
+            </div>
+            <div class="metric-bar-outer">
+              <div id="coderBarFill" class="metric-bar-inner coder-bar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Verdict Summary Box -->
+        <div class="verdict-box" id="verdictSummary">
+          جاري استخراج التحليل النهائي من أرشيف الذكريات...
+        </div>
+
+        <!-- Barcode Stamp -->
+        <div class="barcode-section">
+          <svg class="barcode-svg" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="4" height="40" fill="#000"/>
+            <rect x="8" y="0" width="8" height="40" fill="#000"/>
+            <rect x="20" y="0" width="2" height="40" fill="#000"/>
+            <rect x="26" y="0" width="6" height="40" fill="#000"/>
+            <rect x="36" y="0" width="10" height="40" fill="#000"/>
+            <rect x="50" y="0" width="4" height="40" fill="#000"/>
+            <rect x="60" y="0" width="2" height="40" fill="#000"/>
+            <rect x="68" y="0" width="8" height="40" fill="#000"/>
+            <rect x="82" y="0" width="4" height="40" fill="#000"/>
+            <rect x="92" y="0" width="12" height="40" fill="#000"/>
+            <rect x="110" y="0" width="6" height="40" fill="#000"/>
+            <rect x="122" y="0" width="2" height="40" fill="#000"/>
+            <rect x="130" y="0" width="10" height="40" fill="#000"/>
+            <rect x="146" y="0" width="4" height="40" fill="#000"/>
+            <rect x="156" y="0" width="8" height="40" fill="#000"/>
+            <rect x="170" y="0" width="2" height="40" fill="#000"/>
+            <rect x="178" y="0" width="6" height="40" fill="#000"/>
+            <rect x="190" y="0" width="10" height="40" fill="#000"/>
+          </svg>
+          <div class="barcode-num">AUTHENTICATED BY YOUNES // 2026</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px;">
+          <button id="goToArcadeBtn" class="brutal-btn green" style="width:100%;">
+            الانتقال للتحدي الحاسم: لعبة يونس ضد أسامة 🎮
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SCREEN 4: ARCADE MINI-GAME
+         ======================================================================== -->
+    <section id="screen4" class="game-screen">
+      <div class="game-arena-card">
+        <div class="sticker-badge cyan" style="margin-bottom:12px;">معركة الكود ضد الشو</div>
+        
+        <div class="game-hud">
+          <div class="hud-stat">
+            النقاط: <span id="gameScore">0</span>
+          </div>
+          <div class="hud-stat">
+            الهدف: <span id="gameTarget">100</span>
+          </div>
+          <div class="hud-stat">
+            الصحة:
+            <div class="hud-hp-bar">
+              <div id="gameHpFill" class="hud-hp-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <canvas id="gameCanvas" width="700" height="400"></canvas>
+
+        <!-- On-Screen Controls for Mobile -->
+        <div class="mobile-controls">
+          <button id="touchLeftBtn" class="touch-btn">⬅️ لليسار</button>
+          <button id="touchRightBtn" class="touch-btn">لليمين ➡️</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; width:100%; margin-top:14px; gap:12px; flex-wrap:wrap;">
+          <button id="gameSkipBtn" class="brutal-btn red" style="font-size:0.9rem; padding:10px 16px;">
+            تخطي إلى كشف المستور ⏭️
+          </button>
+          <div style="color:#aaa; font-size:0.85rem; font-weight:700; align-self:center;">
+            اجمع أكواد يونس 🟩 وتجنب حركات الشو والكاميرات 🟥
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SCREEN 5: THE FINAL REVEAL (CINEMATIC MATRIX TRIBUTE)
+         ======================================================================== -->
+    <section id="screen5" class="game-screen">
+      <div class="terminal-window">
+        <div class="terminal-titlebar">
+          <div class="terminal-dots">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+          <div class="terminal-path">C:\YOUNES\VAULT\TRUTH.EXE</div>
+        </div>
+
+        <div class="terminal-body">
+          <canvas id="matrixCanvas" class="terminal-matrix-canvas"></canvas>
+          
+          <div class="speech-container" id="speechContainer">
+            <div class="speech-line" id="line1">يا أسامة..</div>
+            <div class="speech-line" id="line2">
+              الهزار على السلم، باقة النت، استعراض الكاميرات، الجوانتي، وحتى شقاوة الدرس في بيتكم مع مستر أشرف ومس رشا.. دي كلها ذكريات حلوة ومواقف متتنساش.
+            </div>
+            <div class="speech-line highlight" id="line3">
+              بس الفرق دايمًا هيفضل بين:
+            </div>
+            <div class="speech-line highlight" id="line4">
+              اللي بيقلد ترندات التيك توك.. واللي بيصنع التكنولوجيا بكود حقيقي.
+            </div>
+            <div class="speech-line" id="line5">
+              الموقع ده اتبرمج من الصفر مخصوص عشانك..
+            </div>
+            <div class="speech-line highlight" id="line6">
+              الماضي كان حلو.. بس المستقبل للي بيبنيه.
+            </div>
+            <div class="speech-line author" id="line7">
+              &gt; Developed by Younes ⚡
+            </div>
+          </div>
+
+          <div class="terminal-actions">
+            <button id="speakFinalSpeechBtn" class="brutal-btn green">
+              🎙️ إعادة تشغيل الخطاب الصوتي 🔊
+            </button>
+            <button id="restartGameBtn" class="brutal-btn yellow">
+              إعادة التجربة من الأول 🔄
+            </button>
+            <button id="shareVaultBtn" class="brutal-btn cyan">
+              نسخ الرابط لمفاجأة أسامة 📋
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Sarcastic Feedback Toast -->
+  <div id="feedbackToast" class="feedback-toast">
+    <span id="toastIcon">🤡</span>
+    <span id="toastMsg">رسالة التنبيه</span>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT ENGINE: VOICE AUDIO MAPPING + ONLINE SFX + GAME LOGIC
+       ========================================================================== -->
+  <script>
+    /* ==========================================================================
+       🎙️ YOUNES VOICEOVER AUDIO MAPPING
+       ضع مسارات ملفاتك الصوتية هنا أو داخل مجلد (audio/) أو روابط مباشرة / Base64
+       ========================================================================== */
+    const VOICE_OVER_TRACKS = {
+      landing: "audio/landing.mp3",       // فويس أوفر الشاشة الأولى
+      q1: "audio/q1.mp3",                 // فويس أوفر السؤال الأول (الموبايلات والتكنو)
+      q2: "audio/q2.mp3",                 // فويس أوفر السؤال الثاني (السلم وباقة النت)
+      q3: "audio/q3.mp3",                 // فويس أوفر السؤال الثالث (جوانتي فري فاير)
+      q4: "audio/q4.mp3",                 // فويس أوفر السؤال الرابع (ترندات التيك توك)
+      q5: "audio/q5.mp3",                 // فويس أوفر السؤال الخامس (مستر أشرف ومس رشا)
+      q6: "audio/q6.mp3",                 // فويس أوفر السؤال السادس (الـ Fake Ego)
+      q7: "audio/q7.mp3",                 // فويس أوفر السؤال السابع (الهزار بالإيد)
+      report: "audio/report.mp3",         // فويس أوفر تقرير الفحص والشهادة
+      miniGame: "audio/minigame.mp3",     // فويس أوفر بداية لعبة الأركيد
+      finalSpeech: "audio/final.mp3"      // فويس أوفر الخطاب الختامي لأسامة
+    };
+
+    /* ==========================================================================
+       REAL ONLINE AUDIO SFX (FETCHED FROM RELIABLE CDNS)
+       ========================================================================== */
+    const ONLINE_SFX = {
+      whoosh: "https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3",
+      unlock: "https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3",
+      buzzer: "https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3",
+      applause: "https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3",
+      coin: "https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3",
+      damage: "https://assets.mixkit.co/active_storage/sfx/2658/2658-preview.mp3",
+      fanfare: "https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3",
+      matrixAmbient: "https://assets.mixkit.co/active_storage/sfx/2654/2654-preview.mp3"
+    };
+
+    class SoundFXManager {
+      constructor() {
+        this.enabled = true;
+        this.audioCache = {};
+        this.webAudioCtx = null;
+        this.preloadAudio();
+      }
+
+      preloadAudio() {
+        for (const [key, url] of Object.entries(ONLINE_SFX)) {
+          const a = new Audio();
+          a.src = url;
+          a.preload = "auto";
+          this.audioCache[key] = a;
+        }
+      }
+
+      initWebAudio() {
+        if (!this.webAudioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.webAudioCtx = new AudioContext();
+        }
+        if (this.webAudioCtx && this.webAudioCtx.state === 'suspended') {
+          this.webAudioCtx.resume();
+        }
+      }
+
+      play(soundName, volume = 0.8) {
+        if (!this.enabled) return;
+        this.initWebAudio();
+        const audio = this.audioCache[soundName];
+        if (audio) {
+          audio.currentTime = 0;
+          audio.volume = volume;
+          audio.play().catch(() => this.playFallbackSynth(soundName));
+        } else {
+          this.playFallbackSynth(soundName);
+        }
+      }
+
+      playFallbackSynth(type) {
+        if (!this.webAudioCtx) return;
+        try {
+          const osc = this.webAudioCtx.createOscillator();
+          const gain = this.webAudioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(this.webAudioCtx.destination);
+          const now = this.webAudioCtx.currentTime;
+
+          if (type === 'buzzer' || type === 'damage') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(130, now);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            osc.start(); osc.stop(now + 0.4);
+          } else if (type === 'coin' || type === 'applause' || type === 'unlock') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+            osc.start(); osc.stop(now + 0.25);
+          } else {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, now);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+            osc.start(); osc.stop(now + 0.15);
+          }
+        } catch (e) {}
+      }
+    }
+
+    const sound = new SoundFXManager();
+
+    // Voiceover Audio Manager
+    class VoiceoverManager {
+      constructor() {
+        this.enabled = true;
+        this.currentAudio = null;
+      }
+
+      playTrack(trackUrl) {
+        if (!this.enabled || !trackUrl) return;
+        this.stop();
+
+        try {
+          this.currentAudio = new Audio(trackUrl);
+          this.currentAudio.play().catch(() => {
+            // Silently ignore if file doesn't exist
+          });
+        } catch (e) {}
+      }
+
+      stop() {
+        if (this.currentAudio) {
+          this.currentAudio.pause();
+          this.currentAudio.currentTime = 0;
+          this.currentAudio = null;
+        }
+      }
+    }
+
+    const voice = new VoiceoverManager();
+
+    // Top action bar button listeners
+    const soundToggleBtn = document.getElementById('soundToggle');
+    const soundText = document.getElementById('soundText');
+    const soundIcon = document.getElementById('soundIcon');
+    soundToggleBtn.addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      if (sound.enabled) {
+        soundIcon.textContent = '🔊';
+        soundText.textContent = 'المؤثرات: مفعلة';
+        sound.play('coin');
+      } else {
+        soundIcon.textContent = '🔇';
+        soundText.textContent = 'المؤثرات: مكتومة';
+      }
+    });
+
+    const voiceoverToggleBtn = document.getElementById('voiceoverToggle');
+    const voText = document.getElementById('voText');
+    const voIcon = document.getElementById('voIcon');
+    voiceoverToggleBtn.addEventListener('click', () => {
+      voice.enabled = !voice.enabled;
+      if (voice.enabled) {
+        voIcon.textContent = '🎙️';
+        voText.textContent = 'الفويس أوفر: شغال';
+        voiceoverToggleBtn.style.background = 'var(--color-yellow)';
+        sound.play('coin');
+      } else {
+        voice.stop();
+        voIcon.textContent = '🔇';
+        voText.textContent = 'الفويس أوفر: معطل';
+        voiceoverToggleBtn.style.background = '#e5e7eb';
+      }
+    });
+
+    /* ==========================================================================
+       DYNAMIC MEMORY ROAST DIALOGUES
+       ========================================================================== */
+    const ROAST_MEMORIES = [
+      {
+        tag: "⚡ يونس (أرشيف السلم) يتحدث:",
+        text: "«أهلاً يا أسامة في خزينتك السرية.. متفتكرش إن حركات السلم وكاميرات التكنو عدت بالساهل! دوس وافتح لو قلبك جايبك!»"
+      },
+      {
+        tag: "📱 ذكرى كاميرا التكنو:",
+        text: "«فاكر لما التكنو كامون 30 كان طالع من جيبك نصه وكأنك شايل تليسكوب فضائي في الدرس؟ 😂»"
+      },
+      {
+        tag: "📶 فضيحة باقة السلم:",
+        text: "«الباقة ولعت في أول درجتين وعملت نفسك بتكلم بيزنس مان.. والشبكة أصلاً ميتة تحت السلم! 📡🤡»"
+      },
+      {
+        tag: "🧤 قصة جوانتي الصوابع:",
+        text: "«لابس جوانتي قماش ومكمبر في فري فاير وبتتحايل على صاحبك يدخل روم عشان تاخد لقطة وهمية.. كود اللعبة أحسن يا فتك!»"
+      },
+      {
+        tag: "🕺 ترندات الصالة:",
+        text: "«الرقصة المفاجئة في نص القعدة لما الترند نزل.. كانت محتاجة إعادة ضبط مصنع فورية!»"
+      },
+      {
+        tag: "📚 مستر أشرف ومس رشا:",
+        text: "«الدرجات كانت مقفلة في بيتكم، والمقاوحة في الحصة ملهاش أي تبرير علمي.. المهارة الحقيقية في الكود والمشاريع!»"
+      },
+      {
+        tag: "🔥 متغاظ ونايم مقموص:",
+        text: "«تقوله (فكك عادي أي حد يعملها) وتدخل تنام محروق.. بينما كان ممكن تقول عاش وتتعلم وتكبر معاه!»"
+      },
+      {
+        tag: "🤝 الهزار بالإيد ولا الرجولة؟:",
+        text: "«الزق وحركات العيال ملهاش لازمة مع صاحبك الهادي.. الاحترام والنقاش الرجولي هو اللي بيبني الصحاب بجد!»"
+      }
+    ];
+
+    function updateLandingMemory(index = 0) {
+      const mem = ROAST_MEMORIES[index % ROAST_MEMORIES.length];
+      const tag = document.getElementById('memoryAuthorTag');
+      const text = document.getElementById('memoryText');
+      if (tag && text) {
+        tag.textContent = mem.tag;
+        text.textContent = mem.text;
+      }
+    }
+
+    document.getElementById('replayLandingVoBtn').addEventListener('click', () => {
+      const text = document.getElementById('memoryText').textContent;
+      voice.playTrack(VOICE_OVER_TRACKS.landing, text);
+    });
+
+    document.getElementById('replayQuestionVoBtn').addEventListener('click', () => {
+      playCurrentQuestionVoice();
+    });
+
+    document.getElementById('speakFinalSpeechBtn').addEventListener('click', () => {
+      const finalLines = [
+        "يا أسامة..",
+        "الهزار على السلم، باقة النت، استعراض الكاميرات، الجوانتي، وحتى شقاوة الدرس في بيتكم مع مستر أشرف ومس رشا.. دي كلها ذكريات حلوة ومواقف متتنساش.",
+        "بس الفرق دايمًا هيفضل بين: اللي بيقلد ترندات التيك توك.. واللي بيصنع التكنولوجيا بكود حقيقي.",
+        "الموقع ده اتبرمج من الصفر مخصوص عشانك.. الماضي كان حلو.. بس المستقبل للي بيبنيه.",
+        "Developed by Younes"
+      ].join(" ");
+      voice.playTrack(VOICE_OVER_TRACKS.finalSpeech, finalLines);
+    });
+
+    /* ==========================================================================
+       THE 7 QUESTIONS WITH BESPOKE MEME ILLUSTRATIONS
+       ========================================================================== */
+    const QUESTIONS_DATA = [
+      {
+        category: "الموبايلات والتكنولوجيا",
+        text: "لما تحب تجيب موبايل جديد.. الهدف الأساسي بيكون إيه؟",
+        trackKey: "q1",
+        illustrationSvg: `
+          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="15" width="80" height="100" rx="10" fill="#1e293b" stroke="#000" stroke-width="3"/>
+            <rect x="25" y="22" width="70" height="35" rx="6" fill="#000" stroke="#ffd026" stroke-width="2"/>
+            <circle cx="40" cy="35" r="9" fill="#ff4d4d" stroke="#fff" stroke-width="2"/>
+            <circle cx="62" cy="35" r="9" fill="#ffd026" stroke="#fff" stroke-width="2"/>
+            <circle cx="78" cy="45" r="6" fill="#00e5ff" stroke="#fff" stroke-width="2"/>
+            <text x="60" y="80" fill="#ffd026" font-size="10" font-weight="900" text-anchor="middle">CAMON 30</text>
+            <text x="60" y="95" fill="#fff" font-size="8" font-weight="700" text-anchor="middle">📸 500MP SHOT</text>
+            <path d="M5 40 L20 30 L20 70 Z" fill="#ffd026" stroke="#000" stroke-width="2"/>
+            <path d="M100 30 L115 40 L100 70 Z" fill="#ffd026" stroke="#000" stroke-width="2"/>
+
+            <rect x="125" y="50" width="30" height="25" rx="4" fill="#ff4d4d" stroke="#000" stroke-width="2"/>
+            <text x="140" y="67" fill="#fff" font-size="12" font-weight="900" text-anchor="middle">VS</text>
+
+            <rect x="180" y="15" width="80" height="100" rx="10" fill="#0f172a" stroke="#000" stroke-width="3"/>
+            <rect x="185" y="25" width="70" height="70" rx="4" fill="#18181b" stroke="#23e069" stroke-width="1.5"/>
+            <text x="190" y="42" fill="#23e069" font-family="monospace" font-size="9" font-weight="700">&gt; code.js</text>
+            <text x="190" y="58" fill="#38bdf8" font-family="monospace" font-size="8">build(Future);</text>
+            <text x="190" y="74" fill="#e2e8f0" font-family="monospace" font-size="8">git push ✨</text>
+            <text x="220" y="105" fill="#23e069" font-size="9" font-weight="900" text-anchor="middle">HOT 70 PRO</text>
+          </svg>
+        `,
+        caption: "مركبة الفضاء تكنو كامون 30 🛸 ضد كود المستقبل 💻",
+        roastText: "«كاميرات الكامون 30 بتصور القمر.. بس مش هتعمل لك سطر كود واحد يحل مستقبلك يا أسامة! 😂»",
+        options: [
+          {
+            text: "تشتري جهاز شكله مركبة فضائية وكاميرات عملاقة عشان تقلب بيه في التيك توك (Tecno Camon 30).",
+            type: "showoff"
+          },
+          {
+            text: "تجيب جهاز عملي وسريع تبرمج بيه وتطور مشاريعك في صمت (زي الترقية للـ Infinix Hot 70).",
+            type: "coder"
+          }
+        ]
+      },
+      {
+        category: "السلم وباقة النت",
+        text: "إيه قمة الاستعراض والروشنة وأنت طالع سلم الدرس؟",
+        trackKey: "q2",
+        illustrationSvg: `
+          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 115 L60 115 L60 90 L100 90 L100 65 L140 65 L140 40 L180 40 L180 15 L220 15" fill="none" stroke="#000" stroke-width="4"/>
+            <circle cx="100" cy="45" r="14" fill="#ffd026" stroke="#000" stroke-width="3"/>
+            <text x="100" y="50" font-size="12" text-anchor="middle">😎</text>
+            <rect x="114" y="35" width="12" height="20" rx="2" fill="#ff4d4d" stroke="#000" stroke-width="1.5"/>
+            <rect x="135" y="15" width="130" height="32" rx="6" fill="#fff" stroke="#000" stroke-width="2"/>
+            <text x="200" y="30" fill="#000" font-size="9" font-weight="800" text-anchor="middle">«ألو يا بيزنس مان..»</text>
+            <text x="200" y="42" fill="#ff4d4d" font-size="8" font-weight="900" text-anchor="middle">⚠️ باقة النت انتهت!</text>
+          </svg>
+        `,
+        caption: "فضيحة مكالمة السلم والباقة اللي شيعت 📶🪜",
+        roastText: "«الباقة راحت في أول دور ومكمل المكالمة في الخيال.. السلم كان شاهد على كل حركة! 🤡»",
+        options: [
+          {
+            text: "تولع باقة النت وتعمل نفسك بترد على مكالمات مهمة وأنت طالع السلم عشان تحسس اللي معاك إنك معدي.",
+            type: "showoff"
+          },
+          {
+            text: "تطلع هادي ومركز في مصلحتك وحصتك.",
+            type: "coder"
+          }
+        ]
+      },
+      {
+        category: "الجيمنج وبتاع الصوابع",
+        text: "السر الحقيقي للاحتراف في ألعاب الموبايل (فري فاير وببجي) هو...؟",
+        trackKey: "q3",
+        illustrationSvg: `
+          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+            <rect x="30" y="25" width="70" height="85" rx="8" fill="#1e1e1e" stroke="#000" stroke-width="3"/>
+            <rect x="42" y="15" width="18" height="35" rx="4" fill="#3b82f6" stroke="#ffd026" stroke-width="2"/>
+            <rect x="66" y="18" width="18" height="35" rx="4" fill="#3b82f6" stroke="#ffd026" stroke-width="2"/>
+            <text x="65" y="75" fill="#ffd026" font-size="9" font-weight="900" text-anchor="middle">🧤 جوانتي فري فاير</text>
+            <text x="65" y="92" fill="#fff" font-size="8" font-weight="700" text-anchor="middle">كمبرة 100%</text>
+
+            <rect x="130" y="30" width="135" height="40" rx="8" fill="#fff" stroke="#000" stroke-width="2"/>
+            <text x="197" y="47" fill="#000" font-size="9.5" font-weight="900" text-anchor="middle">«ادخل 1v1 روم ونبي!»</text>
+            <text x="197" y="62" fill="#ff4d4d" font-size="8.5" font-weight="800" text-anchor="middle">عشان لقطة وهمية 🤡</text>
+
+            <circle cx="200" cy="95" r="16" fill="#23e069" stroke="#000" stroke-width="2"/>
+            <text x="200" y="100" font-size="14" text-anchor="middle">💻</text>
+          </svg>
+        `,
+        caption: "جوانتي الصوابع الأسطوري والتحايل على الرومات 🧤🔥",
+        roastText: "«الجوانتي القماش مش هيصنع منك بطل فري فاير.. البرمجة هي اللي بتصنع اللعبة نفسها يا أسامة!»",
+        options: [
+          {
+            text: "تشتري جوانتي صوابع قماش وتقعد تكمبر بالساعات وتلح على صاحبك يدخل روم عشان تاخد لقطة وهمية.",
+            type: "showoff"
+          },
+          {
+            text: "إنك تصنع اللعبة وتبرمجها بنفسك من الصفر وتفهم الكود شغال إزاي.",
+            type: "coder"
+          }
+        ]
+      },
+      {
+        category: "الترندات وحركات التيك توك",
+        text: "لما ترند جديد ينزل على التيك توك.. التصرف الصحيح إيه؟",
+        trackKey: "q4",
+        illustrationSvg: `
+          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="70" cy="35" r="14" fill="#ffd026" stroke="#000" stroke-width="3"/>
+            <text x="70" y="40" font-size="13" text-anchor="middle">🤪</text>
+            <path d="M70 50 L70 85 M70 60 L40 45 M70 60 L100 75 M70 85 L50 115 M70 85 L90 115" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+            <rect x="130" y="25" width="130" height="75" rx="8" fill="#18181b" stroke="#000" stroke-width="3"/>
+            <text x="195" y="50" fill="#00e5ff" font-size="12" font-weight="900" text-anchor="middle">🎵 TIKTOK TREND</text>
+            <text x="195" y="70" fill="#ff4d4d" font-size="9.5" font-weight="800" text-anchor="middle">رقصة مفاجئة في نص القعدة</text>
+            <text x="195" y="86" fill="#ffd026" font-size="8" text-anchor="middle">«عشان أبان كول وصايع»</text>
+          </svg>
+        `,
+        caption: "رقصات التيك توك المفاجئة في نص القعدة 🕺🎵",
+        roastText: "«الرقصة المفاجئة في نص القعدة.. كنت محتاج فيها إعادة ضبط مصنع يا أسامة!»",
+        options: [
+          {
+            text: "تقلده برقصة وإيفيه مفاجئ في نص القعدة عشان تبان كول وصايع النت.",
+            type: "showoff"
+          },
+          {
+            text: "تفكس للهبل ده وتستغل وقتك في حاجات حقيقية تبني بيها مستقبلك.",
+            type: "coder"
+          }
+        ]
+      },
+      {
+        category: "التنافس الدراسي والتفوق",
+        text: "أنت في الدرس مع مستر أشرف ومس رشا والدرجات مقفلة.. إزاي تثبت تفوقك الحقيقي؟",
+        trackKey: "q5",
+        illustrationSvg: `
+          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+            <rect x="25" y="15" width="230" height="95" rx="6" fill="#14532d" stroke="#000" stroke-width="3"/>
+            <text x="140" y="40" fill="#fef08a" font-size="12" font-weight="900" text-anchor="middle">📚 درس مستر أشرف & مس رشا</text>
+            <line x1="40" y1="50" x2="240" y2="50" stroke="#fef08a" stroke-width="2"/>
+            <text x="80" y="75" fill="#fff" font-size="10" font-weight="800">أسامة: 99/100 📝</text>
+            <text x="80" y="95" fill="#86efac" font-size="10" font-weight="800">يونس: 100/100 + كود 🚀</text>
+            <circle cx="215" cy="80" r="16" fill="#ffd026" stroke="#000" stroke-width="2"/>
+            <text x="215" y="85" font-size="14" text-anchor="middle">👨‍🏫</text>
+          </svg>
+        `,
+        caption: "سبورة مستر أشرف ومس رشا والدرجات المقفلة 📝💯",
+        roastText: "«مستر أشرف ومس رشا في بيتكم كانوا عارفين مين اللي مقفل ومين اللي عامل حركات! 🎓»",
+        options: [
+          {
+            text: "تقاوح في الحصة وتعمل حركات عشان تلفت الانتباه وتثبت إنك مسيطر.",
+            type: "showoff"
+          },
+          {
+            text: "تخلي مهاراتك ومشاريعك التقنية اللي برة المنهج هي اللي تتكلم عنك.",
+            type: "coder"
+          }
+        ]
+      },
+      {
+        category: "الـ Fake Ego والتنمر الدفاعي",
+        text: "لما صاحبك يعمل موقع أو إنجاز برمجي جامد.. الرد التلقائي للمقموص بيكون إيه؟",
+        trackKey: "q6",
+        illustrationSvg: `
+          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+            <rect x="25" y="20" width="105" height="85" rx="8" fill="#fee2e2" stroke="#ff4d4d" stroke-width="2.5"/>
+            <circle cx="75" cy="50" r="14" fill="#ff4d4d" stroke="#000" stroke-width="2"/>
+            <text x="75" y="55" font-size="12" text-anchor="middle">😡</text>
+            <text x="75" y="80" fill="#991b1b" font-size="8.5" font-weight="900" text-anchor="middle">«عادي أي حد بيعملها»</text>
+            <text x="75" y="93" fill="#b91c1c" font-size="7.5" text-anchor="middle">ونام متغاظ ومحروق 🔥</text>
+
+            <rect x="150" y="20" width="105" height="85" rx="8" fill="#dcfce7" stroke="#23e069" stroke-width="2.5"/>
+            <circle cx="185" cy="50" r="12" fill="#23e069" stroke="#000" stroke-width="2"/>
+            <circle cx="220" cy="50" r="12" fill="#ffd026" stroke="#000" stroke-width="2"/>
+            <text x="185" y="54" font-size="10" text-anchor="middle">💻</text>
+            <text x="220" y="54" font-size="10" text-anchor="middle">🤝</text>
+            <text x="202" y="80" fill="#166534" font-size="9" font-weight="900" text-anchor="middle">«عاش يا بطل!»</text>
+            <text x="202" y="93" fill="#15803d" font-size="7.5" text-anchor="middle">نتعلم ونتطور مع بعض 🚀</text>
+          </svg>
+        `,
+        caption: "القمصة والنوم المحروق ضد الرجولة والتطور المشترك 🔥🤝",
+        roastText: "«تقوله (فكك ده أي حد بيعملها) وتنام محروق.. بينما الإنجاز الحقيقي يستحق تحية وتشجيع!»",
+        options: [
+          {
+            text: "تقوله: 'يا عم فكك عادي ده أي حد بيعملها' وتدخل تنام وأنت متغاظ ومحروق.",
+            type: "showoff"
+          },
+          {
+            text: "تقوله: 'عاش يا بطل.. ونتعلم منك ونتطور مع بعض'.",
+            type: "coder"
+          }
+        ]
+      },
+      {
+        category: "الهزار بالإيد والسيطرة",
+        text: "لما تحب تفتح حوار مع صاحبك الهادي وتكسر المسافات.. بتعمل إيه؟",
+        trackKey: "q7",
+        illustrationSvg: `
+          <svg width="280" height="130" viewBox="0 0 280 130" xmlns="http://www.w3.org/2000/svg">
+            <rect x="25" y="20" width="105" height="85" rx="8" fill="#fff" stroke="#000" stroke-width="2"/>
+            <text x="77" y="45" font-size="20" text-anchor="middle">🤜💥</text>
+            <text x="77" y="75" fill="#ff4d4d" font-size="9" font-weight="900" text-anchor="middle">تمد إيدك بالزق</text>
+            <text x="77" y="90" fill="#666" font-size="7.5" text-anchor="middle">حركات شقاوة عيال</text>
+
+            <rect x="150" y="20" width="105" height="85" rx="8" fill="#fff" stroke="#000" stroke-width="2"/>
+            <text x="202" y="45" font-size="20" text-anchor="middle">☕🤝</text>
+            <text x="202" y="75" fill="#23e069" font-size="9" font-weight="900" text-anchor="middle">نقاش رجولة وقيمة</text>
+            <text x="202" y="90" fill="#666" font-size="7.5" text-anchor="middle">احترام متبادل وتقدير</text>
+          </svg>
+        `,
+        caption: "الزق والهزار بالإيد ضد قعدة الرجولة والنقاش ☕🤝",
+        roastText: "«الهزار بالإيد بيخلص بدري.. بس الاحترام والرجولة هما اللي بيعيشوا يا أسامة!»",
+        options: [
+          {
+            text: "تمد إيدك بالزق وتهزر حركات عيال وتجر شكله بالعافية.",
+            type: "showoff"
+          },
+          {
+            text: "تتكلم باحترام ورجولة وتفتح نقاش له قيمة.",
+            type: "coder"
+          }
+        ]
+      }
+    ];
+
+    let currentQuestionIdx = 0;
+    let showoffScore = 0;
+    let coderScore = 0;
+    let isAnsweringLocked = false;
+
+    const quizProgressBar = document.getElementById('quizProgressBar');
+    const showoffScoreDisplay = document.getElementById('showoffScoreDisplay');
+    const coderScoreDisplay = document.getElementById('coderScoreDisplay');
+    const questionBadge = document.getElementById('questionBadge');
+    const questionTopic = document.getElementById('questionTopic');
+    const questionText = document.getElementById('questionText');
+    const questionIllustration = document.getElementById('questionIllustration');
+    const illustrationCaption = document.getElementById('illustrationCaption');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedbackToast = document.getElementById('feedbackToast');
+    const toastIcon = document.getElementById('toastIcon');
+    const toastMsg = document.getElementById('toastMsg');
+    const quizMemoryText = document.getElementById('quizMemoryText');
+
+    function playCurrentQuestionVoice() {
+      const q = QUESTIONS_DATA[currentQuestionIdx];
+      const fullText = `${q.category}. ${q.text}. الخيار الأول: ${q.options[0].text}. الخيار الثاني: ${q.options[1].text}.`;
+      voice.playTrack(VOICE_OVER_TRACKS[q.trackKey], fullText);
+    }
+
+    function renderCurrentQuestion() {
+      isAnsweringLocked = false;
+      const q = QUESTIONS_DATA[currentQuestionIdx];
+      
+      const progressPercent = Math.round(((currentQuestionIdx + 1) / QUESTIONS_DATA.length) * 100);
+      quizProgressBar.style.width = `${progressPercent}%`;
+      questionBadge.textContent = `السؤال ${currentQuestionIdx + 1} من ${QUESTIONS_DATA.length}`;
+      questionTopic.textContent = q.category;
+      questionText.textContent = q.text;
+      questionIllustration.innerHTML = q.illustrationSvg;
+      illustrationCaption.textContent = q.caption;
+      quizMemoryText.textContent = q.roastText;
+
+      // Play Voiceover automatically for this question
+      playCurrentQuestionVoice();
+
+      // Render Options
+      optionsContainer.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const letter = idx === 0 ? 'أ' : 'ب';
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <div class="option-letter">${letter}</div>
+          <div style="flex:1;">${opt.text}</div>
+        `;
+        btn.addEventListener('click', () => handleOptionSelected(opt, btn));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function showToast(msg, icon, isBuzzer = false) {
+      toastMsg.textContent = msg;
+      toastIcon.textContent = icon;
+      feedbackToast.className = `feedback-toast show ${isBuzzer ? 'buzzer' : 'success'}`;
+      setTimeout(() => {
+        feedbackToast.classList.remove('show');
+      }, 1400);
+    }
+
+    function handleOptionSelected(option, btnElement) {
+      if (isAnsweringLocked) return;
+      isAnsweringLocked = true;
+
+      if (option.type === 'showoff') {
+        showoffScore++;
+        showoffScoreDisplay.textContent = showoffScore;
+        btnElement.classList.add('selected-showoff');
+        sound.play('buzzer');
+        showToast("خطأ.. جرب تفكر بعقلية أكبر من 12 سنة! 🤡", "🤡", true);
+      } else {
+        coderScore++;
+        coderScoreDisplay.textContent = coderScore;
+        btnElement.classList.add('selected-coder');
+        sound.play('applause');
+        showToast("عاش يا بشمهندس! بداية الوعي والرجولة 🧠⚡", "💡", false);
+      }
+
+      setTimeout(() => {
+        currentQuestionIdx++;
+        if (currentQuestionIdx < QUESTIONS_DATA.length) {
+          renderCurrentQuestion();
+        } else {
+          generatePersonalityReport();
+        }
+      }, 1600);
+    }
+
+    /* ==========================================================================
+       STAGE 1: ESCAPING BUTTON LOGIC (THE RUNAWAY BUTTON)
+       ========================================================================== */
+    const runawayBtn = document.getElementById('runawayBtn');
+    const escapeArena = document.getElementById('escapeArena');
+    const escapeCounterText = document.getElementById('escapeCounterText');
+
+    let escapeAttempts = 0;
+    const ESCAPE_LIMIT = 4;
+
+    const ESCAPE_BUTTON_TEXTS = [
+      "فتح الخزنة 🔓",
+      "سريع في فري فاير وبطيء هنا يا أسامة؟ 🏃‍♂️",
+      "مش هتعرف تدوس... جرب تاني 😜",
+      "خلاص ثبت أهو.. دوس يا نجم! 🎯"
+    ];
+
+    function evadeButton(e) {
+      if (escapeAttempts >= ESCAPE_LIMIT) return;
+
+      if (e) e.preventDefault();
+      escapeAttempts++;
+      sound.play('whoosh');
+
+      updateLandingMemory(escapeAttempts);
+
+      const arenaRect = escapeArena.getBoundingClientRect();
+      const btnWidth = runawayBtn.offsetWidth || 180;
+      const btnHeight = runawayBtn.offsetHeight || 55;
+
+      const maxX = Math.max(10, arenaRect.width - btnWidth - 20);
+      const maxY = Math.max(10, arenaRect.height - btnHeight - 20);
+
+      const randX = Math.floor(Math.random() * maxX) + 10;
+      const randY = Math.floor(Math.random() * maxY) + 10;
+
+      runawayBtn.style.left = `${randX}px`;
+      runawayBtn.style.top = `${randY}px`;
+      runawayBtn.style.transform = `rotate(${(Math.random() * 12 - 6).toFixed(1)}deg)`;
+
+      if (escapeAttempts < ESCAPE_LIMIT) {
+        runawayBtn.textContent = ESCAPE_BUTTON_TEXTS[escapeAttempts];
+        escapeCounterText.textContent = `محاولة هروب رقم ${escapeAttempts} من ${ESCAPE_LIMIT}.. ركز يا بطل! 🏃‍♂️`;
+      } else {
+        freezeRunawayButton();
+      }
+    }
+
+    function freezeRunawayButton() {
+      runawayBtn.textContent = ESCAPE_BUTTON_TEXTS[3];
+      runawayBtn.classList.add('frozen');
+      escapeCounterText.textContent = "تم تثبيت الزرار بنجاح! اضغط الآن لفتح الملف السري 🔓";
+      sound.play('coin');
+    }
+
+    runawayBtn.addEventListener('mouseenter', evadeButton);
+    runawayBtn.addEventListener('touchstart', (e) => {
+      if (escapeAttempts < ESCAPE_LIMIT) {
+        evadeButton(e);
+      }
+    }, { passive: false });
+
+    runawayBtn.addEventListener('click', () => {
+      if (escapeAttempts >= ESCAPE_LIMIT) {
+        sound.play('unlock');
+        runawayBtn.textContent = "جاري فك التشفير... 🔓⚡";
+        setTimeout(() => {
+          showScreen('screen2');
+          renderCurrentQuestion();
+        }, 500);
+      }
+    });
+
+    /* ==========================================================================
+       STAGE 3: PERSONALITY REPORT CARD
+       ========================================================================== */
+    function generatePersonalityReport() {
+      showScreen('screen3');
+      sound.play('fanfare');
+
+      const total = showoffScore + coderScore || 7;
+      const showoffPct = Math.round((showoffScore / total) * 100);
+      const coderPct = 100 - showoffPct;
+
+      const showoffPercentText = document.getElementById('showoffPercentText');
+      const coderPercentText = document.getElementById('coderPercentText');
+      const showoffBarFill = document.getElementById('showoffBarFill');
+      const coderBarFill = document.getElementById('coderBarFill');
+      const verdictSummary = document.getElementById('verdictSummary');
+
+      showoffPercentText.textContent = `${showoffPct}%`;
+      coderPercentText.textContent = `${coderPct}%`;
+
+      setTimeout(() => {
+        showoffBarFill.style.width = `${showoffPct}%`;
+        coderBarFill.style.width = `${coderPct}%`;
+      }, 200);
+
+      let verdict = "";
+      if (showoffPct >= 60) {
+        verdict = `⚠️ <strong>التشخيص النهائي:</strong> حالة متأخرة من "شو السلم وتيك توك الكامون 30"! يا أسامة، نسبة الاستعراض عندك (${showoffPct}%) ومحتاج جرعة كود فورية من يونس قبل ما جوانتي الصوابع يسيطر على مستقبلك! 🤡😂`;
+      } else if (showoffPct >= 30) {
+        verdict = `⚖️ <strong>التشخيص النهائي:</strong> فيك أمل (${coderPct}% وعي حقيقي)! بينك وبين عقلية المطور خطوة واحدة.. بس تبطل تقاوح مع مستر أشرف ومس رشا وتبيع جوانتي الفري فاير. 🚀`;
+      } else {
+        verdict = `🔥 <strong>التشخيص النهائي:</strong> عقلية مبرمج محترف متخفي (${coderPct}%)! واضح إنك كنت بتسلك في الأسئلة عشان تهرب من الفضيحة.. بس الأرشيف كاشفك على أي حال! 💻✨`;
+      }
+
+      verdictSummary.innerHTML = verdict;
+      voice.playTrack(VOICE_OVER_TRACKS.report, verdict.replace(/<[^>]*>?/gm, ''));
+    }
+
+    document.getElementById('goToArcadeBtn').addEventListener('click', () => {
+      sound.play('unlock');
+      showScreen('screen4');
+      startArcadeMiniGame();
+    });
+
+    /* ==========================================================================
+       STAGE 4: ARCADE MINI-GAME (YOUNES CODE VS OSAMA SHOWOFF)
+       ========================================================================== */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gameScoreDisplay = document.getElementById('gameScore');
+    const gameHpFill = document.getElementById('gameHpFill');
+    const gameSkipBtn = document.getElementById('gameSkipBtn');
+
+    let gameAnimationId = null;
+    let gameScore = 0;
+    let gameHp = 100;
+    const TARGET_SCORE = 100;
+
+    const player = {
+      x: 310,
+      y: 340,
+      width: 85,
+      height: 35,
+      speed: 8
+    };
+
+    const GOOD_CODE_ITEMS = [
+      { text: "{ }", type: "good", color: "#23e069" },
+      { text: "</>", type: "good", color: "#00e5ff" },
+      { text: "JS", type: "good", color: "#ffd026" },
+      { text: "A12", type: "good", color: "#c084fc" },
+      { text: "Hot70", type: "good", color: "#23e069" },
+      { text: "const", type: "good", color: "#38bdf8" }
+    ];
+
+    const BAD_HAZARD_ITEMS = [
+      { text: "📸 Camon30", type: "bad", color: "#ff4d4d" },
+      { text: "🧤 جوانتي", type: "bad", color: "#ff4d4d" },
+      { text: "🎵 TikTok", type: "bad", color: "#ff4d4d" },
+      { text: "🤡 شو السلم", type: "bad", color: "#ff4d4d" }
+    ];
+
+    let fallingObjects = [];
+    let spawnTimer = 0;
+    let keys = { left: false, right: false };
+
+    function startArcadeMiniGame() {
+      gameScore = 0;
+      gameHp = 100;
+      fallingObjects = [];
+      player.x = canvas.width / 2 - player.width / 2;
+      updateGameHud();
+
+      voice.playTrack(VOICE_OVER_TRACKS.miniGame, "اجمع أكواد يونس وتجنب حركات الشو والكاميرات!");
+
+      if (gameAnimationId) cancelAnimationFrame(gameAnimationId);
+      gameLoop();
+    }
+
+    function updateGameHud() {
+      gameScoreDisplay.textContent = gameScore;
+      gameHpFill.style.width = `${Math.max(0, gameHp)}%`;
+      if (gameHp <= 30) {
+        gameHpFill.style.background = "var(--color-red)";
+      } else {
+        gameHpFill.style.background = "var(--color-green)";
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+    });
+
+    const touchLeftBtn = document.getElementById('touchLeftBtn');
+    const touchRightBtn = document.getElementById('touchRightBtn');
+
+    touchLeftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); keys.left = true; });
+    touchLeftBtn.addEventListener('touchend', (e) => { e.preventDefault(); keys.left = false; });
+    touchRightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); keys.right = true; });
+    touchRightBtn.addEventListener('touchend', (e) => { e.preventDefault(); keys.right = false; });
+
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touchX = e.touches[0].clientX - rect.left;
+      const scaleX = canvas.width / rect.width;
+      player.x = touchX * scaleX - player.width / 2;
+    }, { passive: false });
+
+    function gameLoop() {
+      ctx.fillStyle = "#121216";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = "#1f2937";
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 30) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+
+      if (keys.left) player.x -= player.speed;
+      if (keys.right) player.x += player.speed;
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+      ctx.fillStyle = "#ffd026";
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(player.x, player.y, player.width, player.height);
+
+      ctx.fillStyle = "#000";
+      ctx.font = "bold 13px 'Fira Code', 'Cairo', monospace";
+      ctx.textAlign = "center";
+      ctx.fillText("[YOUNES_DEV]", player.x + player.width / 2, player.y + 22);
+
+      spawnTimer++;
+      if (spawnTimer % 38 === 0) {
+        const isGood = Math.random() > 0.4;
+        const itemData = isGood 
+          ? GOOD_CODE_ITEMS[Math.floor(Math.random() * GOOD_CODE_ITEMS.length)]
+          : BAD_HAZARD_ITEMS[Math.floor(Math.random() * BAD_HAZARD_ITEMS.length)];
+
+        fallingObjects.push({
+          x: Math.random() * (canvas.width - 70) + 10,
+          y: -25,
+          speed: Math.random() * 2 + 3.2,
+          ...itemData
+        });
+      }
+
+      for (let i = fallingObjects.length - 1; i >= 0; i--) {
+        const item = fallingObjects[i];
+        item.y += item.speed;
+
+        const boxWidth = 72;
+        const boxHeight = 28;
+        ctx.fillStyle = item.color;
+        ctx.fillRect(item.x, item.y, boxWidth, boxHeight);
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(item.x, item.y, boxWidth, boxHeight);
+
+        ctx.fillStyle = "#000";
+        ctx.font = "bold 12px 'Tajawal', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(item.text, item.x + boxWidth / 2, item.y + 18);
+
+        if (
+          item.x + boxWidth > player.x &&
+          item.x < player.x + player.width &&
+          item.y + boxHeight > player.y &&
+          item.y < player.y + player.height
+        ) {
+          if (item.type === 'good') {
+            gameScore += 10;
+            sound.play('coin');
+          } else {
+            gameHp -= 15;
+            sound.play('damage');
+          }
+          updateGameHud();
+          fallingObjects.splice(i, 1);
+
+          if (gameScore >= TARGET_SCORE || gameHp <= 0) {
+            triggerFinalRevealScreen();
+            return;
+          }
+          continue;
+        }
+
+        if (item.y > canvas.height + 30) {
+          fallingObjects.splice(i, 1);
+        }
+      }
+
+      gameAnimationId = requestAnimationFrame(gameLoop);
+    }
+
+    gameSkipBtn.addEventListener('click', () => {
+      triggerFinalRevealScreen();
+    });
+
+    function triggerFinalRevealScreen() {
+      if (gameAnimationId) cancelAnimationFrame(gameAnimationId);
+      showScreen('screen5');
+      startCinematicReveal();
+    }
+
+    /* ==========================================================================
+       STAGE 5: CINEMATIC MATRIX FINAL REVEAL
+       ========================================================================== */
+    const matrixCanvas = document.getElementById('matrixCanvas');
+    const mCtx = matrixCanvas.getContext('2d');
+    let matrixInterval = null;
+
+    function initMatrixRain() {
+      matrixCanvas.width = matrixCanvas.offsetWidth || 700;
+      matrixCanvas.height = matrixCanvas.offsetHeight || 400;
+
+      const letters = "01010101YOUNESOSAMA</>{}*#+=@!";
+      const fontSize = 14;
+      const columns = Math.floor(matrixCanvas.width / fontSize);
+      const drops = Array(columns).fill(1);
+
+      if (matrixInterval) clearInterval(matrixInterval);
+
+      matrixInterval = setInterval(() => {
+        mCtx.fillStyle = "rgba(13, 17, 23, 0.1)";
+        mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+        mCtx.fillStyle = "#23e069";
+        mCtx.font = `${fontSize}px 'Fira Code', monospace`;
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = letters.charAt(Math.floor(Math.random() * letters.length));
+          mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }, 45);
+    }
+
+    function startCinematicReveal() {
+      initMatrixRain();
+      sound.play('matrixAmbient');
+
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 120,
+          spread: 90,
+          origin: { y: 0.6 }
+        });
+      }
+
+      const lines = [
+        document.getElementById('line1'),
+        document.getElementById('line2'),
+        document.getElementById('line3'),
+        document.getElementById('line4'),
+        document.getElementById('line5'),
+        document.getElementById('line6'),
+        document.getElementById('line7')
+      ];
+
+      lines.forEach((l, idx) => {
+        l.classList.remove('visible');
+        setTimeout(() => {
+          l.classList.add('visible');
+          sound.playFallbackSynth('coin');
+        }, 600 + idx * 1100);
+      });
+
+      // Play final speech voiceover
+      const finalLines = [
+        "يا أسامة..",
+        "الهزار على السلم، باقة النت، استعراض الكاميرات، الجوانتي، وحتى شقاوة الدرس في بيتكم مع مستر أشرف ومس رشا.. دي كلها ذكريات حلوة ومواقف متتنساش.",
+        "بس الفرق دايمًا هيفضل بين: اللي بيقلد ترندات التيك توك.. واللي بيصنع التكنولوجيا بكود حقيقي.",
+        "الموقع ده اتبرمج من الصفر مخصوص عشانك.. الماضي كان حلو.. بس المستقبل للي بيبنيه.",
+        "Developed by Younes"
+      ].join(" ");
+      voice.playTrack(VOICE_OVER_TRACKS.finalSpeech, finalLines);
+    }
+
+    document.getElementById('restartGameBtn').addEventListener('click', () => {
+      escapeAttempts = 0;
+      currentQuestionIdx = 0;
+      showoffScore = 0;
+      coderScore = 0;
+      showoffScoreDisplay.textContent = '0';
+      coderScoreDisplay.textContent = '0';
+
+      runawayBtn.textContent = ESCAPE_BUTTON_TEXTS[0];
+      runawayBtn.classList.remove('frozen');
+      runawayBtn.style.left = '';
+      runawayBtn.style.top = '';
+      runawayBtn.style.transform = '';
+      escapeCounterText.textContent = "حاول تدوس على الزرار لفتح الخزنة والاطلاع على الملف السري! 🎯";
+
+      sound.play('coin');
+      showScreen('screen1');
+    });
+
+    document.getElementById('shareVaultBtn').addEventListener('click', () => {
+      sound.play('coin');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          showToast("تم نسخ رابط الخزنة بنجاح! ابعته لأسامة 😂🚀", "📋", false);
+        }).catch(() => {
+          showToast("تم النسخ! ابعته لأسامة 🚀", "📋", false);
+        });
+      } else {
+        showToast("انسخ الرابط من المتصفح وابعته لأسامة!", "📋", false);
+      }
+    });
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Global click listener to unlock Web Audio on modern browsers
+    window.addEventListener('click', () => {
+      sound.initWebAudio();
+    }, { once: true });
+    window.addEventListener('touchstart', () => {
+      sound.initWebAudio();
+    }, { once: true });
+  </script>
+</body>
+</html>
